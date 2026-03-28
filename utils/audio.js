@@ -8,25 +8,49 @@ let _audioCtx = null;
 const _ttsCache = {};
 
 function _play(src, onError) {
+  // 销毁上一个实例
   if (_audioCtx) {
-    _audioCtx.stop();
-    _audioCtx.destroy();
+    try { _audioCtx.stop(); } catch (e) {}
+    try { _audioCtx.destroy(); } catch (e) {}
     _audioCtx = null;
   }
+
   const ctx = wx.createInnerAudioContext();
   _audioCtx = ctx;
+  ctx.autoplay = false;
   ctx.src = src;
-  if (onError) ctx.onError(onError);
-  ctx.play();
+
+  // 新版基础库（3.x）需要等 canplay 后再 play，否则静默失败
+  ctx.onCanplay(() => {
+    ctx.play();
+  });
+
+  // 兜底：部分本地 mp3 不触发 canplay，300ms 后强制 play
+  const fallbackTimer = setTimeout(() => {
+    try { ctx.play(); } catch (e) {}
+  }, 300);
+
+  ctx.onPlay(() => {
+    clearTimeout(fallbackTimer);
+  });
+
+  ctx.onError((e) => {
+    clearTimeout(fallbackTimer);
+    console.warn(`音频播放失败 [${src}]:`, e.errMsg || e);
+    if (onError) onError(e);
+  });
+
+  ctx.onEnded(() => {
+    try { ctx.destroy(); } catch (e) {}
+    if (_audioCtx === ctx) _audioCtx = null;
+  });
 }
 
 /**
  * 播放指定 id 的本地预录音频（对应 phrases.js 词条）
  */
 function playItalian(id) {
-  _play(`/audio/${id}.mp3`, (e) => {
-    console.warn(`音频播放失败 [${id}]:`, e);
-  });
+  _play(`/audio/${id}.mp3`);
 }
 
 /**
@@ -34,16 +58,17 @@ function playItalian(id) {
  * @param {string} text
  */
 function playText(text) {
-  if (!text) return;
+  if (!text || !text.trim()) return;
+  const key = text.trim();
   // 命中本地缓存，直接播放
-  if (_ttsCache[text]) {
-    _play(_ttsCache[text]);
+  if (_ttsCache[key]) {
+    _play(_ttsCache[key]);
     return;
   }
   // 未缓存，实时请求
-  const url = `${SERVER}/tts?text=${encodeURIComponent(text)}&lang=it`;
+  const url = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
   _play(url, (e) => {
-    console.warn(`在线 TTS 失败 [${text}]:`, e);
+    console.warn(`在线 TTS 失败 [${key}]:`, e);
   });
 }
 
@@ -52,7 +77,7 @@ function playText(text) {
  * @param {string} text - 意大利语文本
  */
 function prefetchTTS(text) {
-  if (!text || _ttsCache[text]) return; // 已缓存则跳过
+  if (!text || _ttsCache[text]) return;
   const url = `${SERVER}/tts?text=${encodeURIComponent(text)}&lang=it`;
   wx.downloadFile({
     url,
@@ -61,7 +86,7 @@ function prefetchTTS(text) {
         _ttsCache[text] = res.tempFilePath;
       }
     },
-    fail: () => {}, // 静默失败，不影响正常播放
+    fail: () => {},
   });
 }
 
@@ -70,8 +95,8 @@ function prefetchTTS(text) {
  */
 function stopAudio() {
   if (_audioCtx) {
-    _audioCtx.stop();
-    _audioCtx.destroy();
+    try { _audioCtx.stop(); } catch (e) {}
+    try { _audioCtx.destroy(); } catch (e) {}
     _audioCtx = null;
   }
 }
