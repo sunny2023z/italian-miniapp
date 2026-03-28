@@ -1,42 +1,34 @@
 // utils/audio.js - 意大利语音频播放工具
-// 策略：先 downloadFile 到本地，再播放本地文件，彻底避开真机 src 直接请求远端的问题
+// 策略：优先播放本地打包音频，找不到则走在线 TTS + 缓存
 
 const SERVER = 'https://italian-translate.jellyzen.fun';
+const { ALL_PHRASES } = require('../data/phrases');
+
+// 建立 italian文本 → id 的索引，用于快速查本地文件
+const _textToId = {};
+ALL_PHRASES.forEach(p => { _textToId[p.italian.trim()] = p.id; });
 
 let _audioCtx = null;
-const _ttsCache = {};   // text → 本地 tempFilePath
-const _pending = {};    // text → true（正在下载中，防重复）
+const _ttsCache = {};  // text → downloadFile 缓存的 tempFilePath
+const _pending = {};
 
 function _playLocal(filePath) {
-  console.log('[audio] _playLocal:', filePath);
-
   if (_audioCtx) {
     try { _audioCtx.stop(); } catch (e) {}
     try { _audioCtx.destroy(); } catch (e) {}
     _audioCtx = null;
   }
 
-  // 切换到扬声器输出
   try {
-    wx.setInnerAudioOption({
-      speakerOn: true,
-      obeyMuteSwitch: false,
-    });
+    wx.setInnerAudioOption({ speakerOn: true, obeyMuteSwitch: false });
   } catch (e) {}
 
   const ctx = wx.createInnerAudioContext();
   _audioCtx = ctx;
-  ctx.obeyMuteSwitch = false;  // 静音开关不影响播放
+  ctx.obeyMuteSwitch = false;
   ctx.src = filePath;
 
-  ctx.onCanplay(() => {
-    console.log('[audio] onCanplay, play()');
-    ctx.play();
-  });
-
-  ctx.onPlay(() => {
-    console.log('[audio] playing');
-  });
+  ctx.onCanplay(() => { ctx.play(); });
 
   ctx.onError((e) => {
     console.error('[audio] error:', JSON.stringify(e));
@@ -48,37 +40,16 @@ function _playLocal(filePath) {
   });
 
   // 兜底
-  setTimeout(() => {
-    try { ctx.play(); } catch (e) {}
-  }, 400);
+  setTimeout(() => { try { ctx.play(); } catch (e) {} }, 400);
 }
 
-function playText(text) {
-  if (!text || !text.trim()) return;
-  const key = text.trim();
-  console.log('[audio] playText:', key);
-
-  // 已有本地缓存，直接播
-  if (_ttsCache[key]) {
-    _playLocal(_ttsCache[key]);
-    return;
-  }
-
-  // 正在下载中，等它
-  if (_pending[key]) {
-    console.log('[audio] already downloading, waiting...');
-    return;
-  }
-
-  // 下载到本地再播
-  const url = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
-  console.log('[audio] downloading:', url);
+function _downloadAndPlay(key) {
+  if (_pending[key]) return;
   _pending[key] = true;
-
+  const url = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
   wx.downloadFile({
     url,
     success: (res) => {
-      console.log('[audio] download success, status:', res.statusCode, 'path:', res.tempFilePath);
       delete _pending[key];
       if (res.statusCode === 200) {
         _ttsCache[key] = res.tempFilePath;
@@ -92,11 +63,42 @@ function playText(text) {
   });
 }
 
-function prefetchTTS(text) {
-  if (!text || _ttsCache[text.trim()] || _pending[text.trim()]) return;
+/**
+ * 播放意大利语文本
+ * 优先级：本地打包音频 > 会话缓存 > 在线 TTS 下载
+ */
+function playText(text) {
+  if (!text || !text.trim()) return;
   const key = text.trim();
-  const url = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
+
+  // 1. 本地打包音频（速查词条）
+  const id = _textToId[key];
+  if (id !== undefined) {
+    _playLocal(`/audio/${id}.mp3`);
+    return;
+  }
+
+  // 2. 会话缓存（翻译结果等动态内容）
+  if (_ttsCache[key]) {
+    _playLocal(_ttsCache[key]);
+    return;
+  }
+
+  // 3. 在线 TTS 下载
+  _downloadAndPlay(key);
+}
+
+/**
+ * 预加载到会话缓存（用于动态翻译结果）
+ */
+function prefetchTTS(text) {
+  if (!text) return;
+  const key = text.trim();
+  // 本地有包就不需要预加载
+  if (_textToId[key] !== undefined) return;
+  if (_ttsCache[key] || _pending[key]) return;
   _pending[key] = true;
+  const url = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
   wx.downloadFile({
     url,
     success: (res) => {
@@ -117,7 +119,7 @@ function stopAudio() {
 
 function playItalian(text) {
   if (typeof text === 'number') {
-    console.warn('[audio] playItalian(id) 已废弃');
+    console.warn('[audio] playItalian(id) 已废弃，请传意大利语文本');
     return;
   }
   playText(text);
