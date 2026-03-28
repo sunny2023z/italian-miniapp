@@ -31,12 +31,8 @@ Page({
   },
 
   onCardTap(e) {
-    const { id, italian, custom } = e.currentTarget.dataset;
-    if (custom === 'true' || custom === true) {
-      playText(italian);
-    } else {
-      playItalian(parseInt(id));
-    }
+    const italian = e.currentTarget.dataset.italian;
+    if (italian) playText(italian);
   },
 
   onToggleFav(e) {

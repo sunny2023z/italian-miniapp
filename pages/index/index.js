@@ -137,7 +137,8 @@ Page({
   },
 
   onCardTap(e) {
-    playItalian(parseInt(e.currentTarget.dataset.id));
+    const text = e.currentTarget.dataset.italian;
+    if (text) playText(text);
   },
 
   onToggleFav(e) {

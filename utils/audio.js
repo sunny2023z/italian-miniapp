@@ -1,14 +1,13 @@
-// utils/audio.js - 意大利语音频播放工具
+// utils/audio.js - 意大利语音频播放工具（全走在线 TTS + 本地缓存）
 
 const SERVER = 'https://italian-translate.jellyzen.fun';
 
 let _audioCtx = null;
 
-// 本地 TTS 缓存：text → 本地临时文件路径
+// 持久缓存：text → 本地临时文件路径（会话内有效）
 const _ttsCache = {};
 
 function _play(src, onError) {
-  // 销毁上一个实例
   if (_audioCtx) {
     try { _audioCtx.stop(); } catch (e) {}
     try { _audioCtx.destroy(); } catch (e) {}
@@ -20,12 +19,11 @@ function _play(src, onError) {
   ctx.autoplay = false;
   ctx.src = src;
 
-  // 新版基础库（3.x）需要等 canplay 后再 play，否则静默失败
   ctx.onCanplay(() => {
     ctx.play();
   });
 
-  // 兜底：部分本地 mp3 不触发 canplay，300ms 后强制 play
+  // 兜底：300ms 后没触发 canplay 则强制 play
   const fallbackTimer = setTimeout(() => {
     try { ctx.play(); } catch (e) {}
   }, 300);
@@ -47,43 +45,51 @@ function _play(src, onError) {
 }
 
 /**
- * 播放指定 id 的本地预录音频（对应 phrases.js 词条）
- */
-function playItalian(id) {
-  _play(`/audio/${id}.mp3`);
-}
-
-/**
- * 播放任意意大利语文本（优先本地缓存，否则实时请求）
+ * 播放任意意大利语文本
+ * 优先命中会话缓存（已下载的 tempFilePath），否则直接用 TTS URL 播放
+ * 播放成功后异步下载缓存，下次秒播
  * @param {string} text
  */
 function playText(text) {
   if (!text || !text.trim()) return;
   const key = text.trim();
-  // 命中本地缓存，直接播放
+
   if (_ttsCache[key]) {
     _play(_ttsCache[key]);
     return;
   }
-  // 未缓存，实时请求
-  const url = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
-  _play(url, (e) => {
-    console.warn(`在线 TTS 失败 [${key}]:`, e);
-  });
-}
 
-/**
- * 预加载 TTS 音频到本地缓存（翻译完成后调用，用户点击前就下载好）
- * @param {string} text - 意大利语文本
- */
-function prefetchTTS(text) {
-  if (!text || _ttsCache[text]) return;
-  const url = `${SERVER}/tts?text=${encodeURIComponent(text)}&lang=it`;
+  const url = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
+  // 先直接播放（streaming），同时异步下载缓存备用
+  _play(url, (e) => {
+    console.warn(`TTS 失败 [${key}]:`, e);
+  });
+
+  // 后台缓存，下次秒播
   wx.downloadFile({
     url,
     success: (res) => {
       if (res.statusCode === 200) {
-        _ttsCache[text] = res.tempFilePath;
+        _ttsCache[key] = res.tempFilePath;
+      }
+    },
+    fail: () => {},
+  });
+}
+
+/**
+ * 预加载 TTS 到缓存（翻译完成后调用）
+ * @param {string} text
+ */
+function prefetchTTS(text) {
+  if (!text || _ttsCache[text.trim()]) return;
+  const key = text.trim();
+  const url = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
+  wx.downloadFile({
+    url,
+    success: (res) => {
+      if (res.statusCode === 200) {
+        _ttsCache[key] = res.tempFilePath;
       }
     },
     fail: () => {},
@@ -99,6 +105,18 @@ function stopAudio() {
     try { _audioCtx.destroy(); } catch (e) {}
     _audioCtx = null;
   }
+}
+
+// 兼容旧调用：playItalian 现在也走 TTS
+// phrases.js 里每个词条都有 italian 字段，调用方改成传文本即可
+// 但为了不改所有调用处，这里保留签名，text 传意大利语文本
+function playItalian(text) {
+  if (typeof text === 'number') {
+    // 旧代码传 id，忽略（预录音频已废弃）
+    console.warn('playItalian(id) 已废弃，请改为 playText(italianText)');
+    return;
+  }
+  playText(text);
 }
 
 module.exports = { playItalian, playText, prefetchTTS, stopAudio };

@@ -52,7 +52,7 @@
     </view>
 
     <view wx:for="{{filteredPhrases}}" wx:key="id" class="phrase-wrapper">
-      <view class="phrase-card {{item.isFav ? 'faved' : ''}}" bindtap="onCardTap" data-id="{{item.id}}">
+      <view class="phrase-card {{item.isFav ? 'faved' : ''}}" bindtap="onCardTap" data-id="{{item.id}}" data-italian="{{item.italian}}">
         <view class="card-body">
           <view class="card-main">
             <text class="italian-text">{{item.italian}}</text>
