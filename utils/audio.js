@@ -4,9 +4,13 @@
 const SERVER = 'https://italian-translate.jellyzen.fun';
 const { ALL_PHRASES } = require('../data/phrases');
 
-// 建立 italian文本 → id 的索引，用于快速查本地文件
+// 建立 italian文本 → id 的索引（速查页102条 + 学习页83条）
 const _textToId = {};
 ALL_PHRASES.forEach(p => { _textToId[p.italian.trim()] = p.id; });
+
+// 学习页额外词汇（id 从102起）
+const _learnAudioMap = {"Uno":105,"Mi chiamo...":102,"Arrivederci":104,"Piacere":103,"Due":106,"Tre":107,"Sette":111,"Cinque":109,"Quattro":108,"Sei":110,"Nove":113,"Dieci":114,"Buon appetito":115,"È delizioso":116,"Otto":112,"La stazione":119,"Cameriere":117,"La cassa":121,"Il metro":120,"Che ora è?":123,"Check-in/Check-out":122,"La settimana":126,"Domani":125,"Oggi":124,"Fa caldo":129,"Piove":131,"Fa freddo":130,"Il mese":127,"Che tempo fa?":128,"Il fratello":136,"Il padre":134,"La famiglia":133,"La primavera":132,"La madre":135,"Rosso":139,"Blu":140,"La sorella":137,"I nonni":138,"Verde":141,"Piccolo":143,"Ho bisogno di aiuto":145,"Chiami un medico!":146,"Grande":144,"Nero / Bianco":142,"Il binario":150,"In ritardo":151,"Mi fa male...":147,"Andata e ritorno":149,"La farmacia":148,"avere":155,"essere":154,"fare":156,"Devo cambiare?":153,"Il capolinea":152,"potere":159,"andare":157,"la porta":161,"venire":158,"il libro":160,"con":166,"il ragazzo":162,"la ragazza":163,"le porte":165,"i libri":164,"per":167,"dovere":169,"Posso?":171,"sapere":170,"volere":168,"grande":174,"Devo":172,"buono/buona":176,"piccolo/piccola":175,"bello/bella":173,"sono andato":181,"vecchio/vecchia":178,"ho bevuto":180,"nuovo/nuova":177,"ho mangiato":179,"ieri":184,"ho fatto":183,"ho visto":182};
+Object.entries(_learnAudioMap).forEach(([text, id]) => { _textToId[text] = id; });
 
 let _audioCtx = null;
 const _ttsCache = {};  // text → downloadFile 缓存的 tempFilePath
