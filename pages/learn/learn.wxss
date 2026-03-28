@@ -378,6 +378,8 @@
 }
 
 .badge-0 { background: #E8F4FD; color: #2E86C1; }
+.badge-foundation { background: #FFF3CD; color: #856404; }
+.badge-verbs { background: #E8F5E9; color: #2E7D32; }
 .badge-1 { background: #FEF0E6; color: #C1440E; }
 .badge-2 { background: #EBF5E0; color: #4A7A1E; }
 .badge-3 { background: #F3E8FF; color: #7B2FA6; }
@@ -436,6 +438,8 @@
   transition: width 0.3s ease;
 }
 
+.fill-foundation { background: linear-gradient(90deg, #856404, #D4A017); }
+.fill-verbs { background: linear-gradient(90deg, #2E7D32, #4CAF50); }
 .fill-1 { background: linear-gradient(90deg, #C1440E, #E8622A); }
 .fill-2 { background: linear-gradient(90deg, #4A7A1E, #72B030); }
 .fill-3 { background: linear-gradient(90deg, #7B2FA6, #A855D8); }
@@ -1100,3 +1104,70 @@
   background: linear-gradient(135deg, #6B7C3B, #8FAA4E);
   box-shadow: 0 6rpx 20rpx rgba(107, 124, 59, 0.3);
 }
+
+/* ─── 变位表（课程弹窗内）──────────────────────────────────────────────────── */
+.conj-modal-table {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  overflow: hidden;
+  border: 1rpx solid #F0E8E0;
+  margin: 0 0 24rpx;
+}
+
+.conj-modal-header {
+  display: flex;
+  flex-direction: row;
+  background: #C1440E;
+  padding: 16rpx 20rpx;
+}
+
+.conj-modal-th {
+  flex: 1;
+  font-size: 24rpx;
+  color: #FFFFFF;
+  font-weight: 600;
+  text-align: center;
+}
+
+.th-form {
+  flex: 1.4;
+}
+
+.conj-modal-row {
+  display: flex;
+  flex-direction: row;
+  padding: 18rpx 20rpx;
+  border-bottom: 1rpx solid #F5EDE8;
+  align-items: center;
+}
+
+.row-even {
+  background: #FDF7F4;
+}
+
+.conj-modal-person {
+  flex: 1;
+  font-size: 26rpx;
+  color: #888;
+  text-align: center;
+}
+
+.conj-modal-form {
+  flex: 1.4;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #C1440E;
+  text-align: center;
+  font-style: italic;
+}
+
+.conj-modal-meaning {
+  flex: 1;
+  font-size: 26rpx;
+  color: #555;
+  text-align: center;
+}
+
+/* badge-foundation / badge-verbs 对应路径说明 */
+.path-ov-badge.badge-foundation { background: #FFF3CD; color: #856404; }
+.path-ov-badge.badge-verbs      { background: #E8F5E9; color: #2E7D32; }
