@@ -1219,3 +1219,33 @@
   font-weight: 500;
   line-height: 1.6;
 }
+
+/* ─── Introduction 历史背景对比 ────────────────────────────────────────────── */
+.history-compare {
+  margin: 20rpx 0 16rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.history-item {
+  background: #FFFFFF;
+  border-radius: 14rpx;
+  padding: 20rpx 22rpx;
+  border: 1rpx solid #F0E8E0;
+}
+
+.history-lang {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.history-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}

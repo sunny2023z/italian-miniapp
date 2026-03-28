@@ -124,6 +124,24 @@
         <view class="intro-divider"></view>
 
         <view class="intro-section">
+          <text class="intro-section-title">🏛️ 规则多，但有逻辑——为什么？</text>
+          <text class="intro-section-text">意大利语直接从拉丁语演化而来，而拉丁语是古罗马帝国的官方语言，已经有 2000 多年历史。冠词、动词变位、阴阳性这些规则，都是那时候留下来的。</text>
+          <view class="history-compare">
+            <view class="history-item">
+              <text class="history-lang">🇮🇹 意大利语</text>
+              <text class="history-desc">规则多，但自洽。掌握了规律，陌生词也能猜对。</text>
+            </view>
+            <view class="history-item">
+              <text class="history-lang">🇬🇧 英语</text>
+              <text class="history-desc">被维京人、法语反复冲击，规则越打越碎，靠死记特例。</text>
+            </view>
+          </view>
+          <text class="intro-tip">💡 阴阳性不是「规定死的性别」，只是一种分类系统——就像给所有名词贴 A 类或 B 类标签，让周围的词知道该用哪个形式。记新词时连冠词一起记（il libro，不是 libro），自然就内化了。</text>
+        </view>
+
+        <view class="intro-divider"></view>
+
+        <view class="intro-section">
           <text class="intro-section-title">🗺️ 这套课程怎么安排的</text>
           <view class="path-overview">
             <view class="path-ov-item">
