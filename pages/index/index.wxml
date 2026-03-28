@@ -11,11 +11,28 @@
         placeholder-class="search-placeholder"
         value="{{searchText}}"
         bindinput="onSearchInput"
+        bindfocus="onSearchFocus"
+        bindblur="onSearchBlur"
         bindconfirm="onSearchConfirm"
         confirm-type="search"
       />
       <view wx:if="{{translateLoading}}" class="search-spinner">···</view>
       <view wx:elif="{{searchText}}" class="search-clear" catchtap="onSearchClear">✕</view>
+    </view>
+
+    <!-- 历史搜索下拉 -->
+    <view wx:if="{{showHistory && searchHistory.length > 0}}" class="history-panel">
+      <view class="history-header">
+        <text class="history-title">最近搜索</text>
+        <view class="history-clear-btn" catchtap="onHistoryClear">清空</view>
+      </view>
+      <view wx:for="{{searchHistory}}" wx:key="*this" class="history-item">
+        <view class="history-item-text" catchtap="onHistoryTap" data-text="{{item}}">
+          <text class="history-icon">🕐</text>
+          <text class="history-word">{{item}}</text>
+        </view>
+        <view class="history-del" catchtap="onHistoryDelete" data-text="{{item}}">✕</view>
+      </view>
     </view>
   </view>
 
@@ -34,33 +51,25 @@
   <!-- Phrase List -->
   <scroll-view class="phrase-list" scroll-y="true" enhanced="true" bounces="true">
 
-    <!-- 翻译结果卡片：样式同速查词条，置顶 -->
+    <!-- 翻译结果卡片 -->
     <view wx:if="{{translateResult}}" class="phrase-wrapper">
-      <view
-        class="phrase-card {{translateFaved ? 'faved' : ''}} translate-card"
-        bindtap="onPlayTranslateResult"
-      >
+      <view class="phrase-card {{translateFaved ? 'faved' : ''}} translate-card" bindtap="onPlayTranslateResult">
         <view class="card-body">
           <view class="card-main">
             <text class="italian-text">{{translateItalian}}</text>
             <text class="chinese-text">{{translateChinese}}</text>
           </view>
           <view class="card-actions">
-            <view
-              class="action-icon {{translateFaved ? 'fav-on' : 'fav-off'}}"
-              catchtap="onFavTranslate"
-            >{{translateFaved ? '⭐' : '☆'}}</view>
+            <view class="action-icon {{translateFaved ? 'fav-on' : 'fav-off'}}" catchtap="onFavTranslate">
+              {{translateFaved ? '⭐' : '☆'}}
+            </view>
           </view>
         </view>
       </view>
     </view>
 
     <view wx:for="{{filteredPhrases}}" wx:key="id" class="phrase-wrapper">
-      <view
-        class="phrase-card {{item.isFav ? 'faved' : ''}}"
-        bindtap="onCardTap"
-        data-id="{{item.id}}"
-      >
+      <view class="phrase-card {{item.isFav ? 'faved' : ''}}" bindtap="onCardTap" data-id="{{item.id}}">
         <view class="card-body">
           <view class="card-main">
             <text class="italian-text">{{item.italian}}</text>
@@ -68,11 +77,9 @@
             <text class="chinese-text">{{item.chinese}}</text>
           </view>
           <view class="card-actions">
-            <view
-              class="action-icon {{item.isFav ? 'fav-on' : 'fav-off'}}"
-              catchtap="onToggleFav"
-              data-id="{{item.id}}"
-            >{{item.isFav ? '⭐' : '☆'}}</view>
+            <view class="action-icon {{item.isFav ? 'fav-on' : 'fav-off'}}" catchtap="onToggleFav" data-id="{{item.id}}">
+              {{item.isFav ? '⭐' : '☆'}}
+            </view>
           </view>
         </view>
         <view wx:if="{{item.tip}}" class="card-tip">

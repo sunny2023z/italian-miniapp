@@ -4,6 +4,8 @@ const { playItalian, playText, prefetchTTS } = require('../../utils/audio');
 
 const SERVER = 'https://italian-translate.jellyzen.fun';
 const TRANSLATE_DEBOUNCE = 400;
+const HISTORY_KEY = 'italian_search_history';
+const HISTORY_MAX = 10;
 
 Page({
   data: {
@@ -12,10 +14,13 @@ Page({
     selectedCat: -1,
     searchText: '',
     favorites: {},
-    // 翻译结果（拆成意大利语/中文两个字段，对齐卡片结构）
-    translateResult: '',    // 原始结果（用于播放判断）
-    translateItalian: '',   // 显示在卡片意大利语位置
-    translateChinese: '',   // 显示在卡片中文位置
+    // 历史搜索
+    searchHistory: [],
+    showHistory: false,
+    // 翻译结果
+    translateResult: '',
+    translateItalian: '',
+    translateChinese: '',
     translateFaved: false,
     translateLoading: false,
   },
@@ -34,15 +39,13 @@ Page({
 
   _loadState() {
     const favorites = wx.getStorageSync('italian_favorites') || {};
-    this.setData({ favorites });
+    const searchHistory = wx.getStorageSync(HISTORY_KEY) || [];
+    this.setData({ favorites, searchHistory });
   },
 
   _applyFilter() {
     const { selectedCat, searchText, favorites } = this.data;
-    let list = ALL_PHRASES.map(p => ({
-      ...p,
-      isFav: !!favorites[p.id],
-    }));
+    let list = ALL_PHRASES.map(p => ({ ...p, isFav: !!favorites[p.id] }));
     if (selectedCat >= 0) {
       list = list.filter(p => p.cat === selectedCat);
     }
@@ -57,11 +60,35 @@ Page({
     this.setData({ filteredPhrases: list });
   },
 
+  // 保存搜索词到历史（去重，最新的排最前）
+  _saveHistory(text) {
+    if (!text.trim()) return;
+    let history = wx.getStorageSync(HISTORY_KEY) || [];
+    history = history.filter(h => h !== text);
+    history.unshift(text);
+    if (history.length > HISTORY_MAX) history = history.slice(0, HISTORY_MAX);
+    wx.setStorageSync(HISTORY_KEY, history);
+    this.setData({ searchHistory: history });
+  },
+
+  // 输入框获取焦点：显示历史
+  onSearchFocus() {
+    this.setData({ showHistory: true });
+  },
+
+  // 输入框失去焦点：延迟隐藏（留出点击历史的时间）
+  onSearchBlur() {
+    setTimeout(() => this.setData({ showHistory: false }), 200);
+  },
+
   onSearchInput(e) {
     const val = e.detail.value;
-    // 输入变化时清空翻译结果，实时过滤词条
-    this.setData({ searchText: val, translateResult: '', translateItalian: '', translateChinese: '', translateFaved: false }, () => this._applyFilter());
-    // 防抖自动翻译
+    // 有输入时隐藏历史下拉，显示搜索结果
+    this.setData({
+      searchText: val,
+      showHistory: !val,
+      translateResult: '', translateItalian: '', translateChinese: '', translateFaved: false,
+    }, () => this._applyFilter());
     if (this._timer) clearTimeout(this._timer);
     if (!val.trim()) { this.setData({ translateLoading: false }); return; }
     this.setData({ translateLoading: true });
@@ -72,15 +99,42 @@ Page({
     const val = e.detail.value;
     if (!val.trim()) return;
     if (this._timer) clearTimeout(this._timer);
+    this._saveHistory(val.trim());
+    this.setData({ showHistory: false });
     this._doTranslate(val.trim());
   },
 
   onSearchClear() {
     if (this._timer) clearTimeout(this._timer);
     this.setData({
-      searchText: '', translateResult: '', translateItalian: '', translateChinese: '',
+      searchText: '', showHistory: true,
+      translateResult: '', translateItalian: '', translateChinese: '',
       translateFaved: false, translateLoading: false,
     }, () => this._applyFilter());
+  },
+
+  // 点击历史词条
+  onHistoryTap(e) {
+    const text = e.currentTarget.dataset.text;
+    this.setData({ searchText: text, showHistory: false,
+      translateResult: '', translateItalian: '', translateChinese: '', translateFaved: false,
+    }, () => this._applyFilter());
+    this._saveHistory(text);
+    this._doTranslate(text);
+  },
+
+  // 删除单条历史
+  onHistoryDelete(e) {
+    const text = e.currentTarget.dataset.text;
+    let history = (wx.getStorageSync(HISTORY_KEY) || []).filter(h => h !== text);
+    wx.setStorageSync(HISTORY_KEY, history);
+    this.setData({ searchHistory: history });
+  },
+
+  // 清空所有历史
+  onHistoryClear() {
+    wx.setStorageSync(HISTORY_KEY, []);
+    this.setData({ searchHistory: [] });
   },
 
   _doTranslate(text) {
@@ -102,24 +156,19 @@ Page({
             translateChinese: isChinese ? text : result,
             translateFaved: false,
           });
-          // 翻译完立刻预下载 TTS，用户点击时直接播本地文件
           prefetchTTS(italian);
         }
       },
-      fail: (err) => {
-        console.error('[translate] 失败:', err);
-      },
+      fail: (err) => console.error('[translate] 失败:', err),
       complete: () => this.setData({ translateLoading: false }),
     });
   },
 
-  // 点翻译卡片 = 播放意大利语
   onPlayTranslateResult() {
     const { translateItalian } = this.data;
     if (translateItalian) playText(translateItalian);
   },
 
-  // 收藏翻译结果（存为自定义词条，key 用 `custom_` 前缀）
   onFavTranslate() {
     const { translateItalian, translateChinese, translateFaved } = this.data;
     if (!translateItalian) return;
@@ -150,11 +199,7 @@ Page({
   onToggleFav(e) {
     const id = parseInt(e.currentTarget.dataset.id);
     const favorites = { ...this.data.favorites };
-    if (favorites[id]) {
-      delete favorites[id];
-    } else {
-      favorites[id] = true;
-    }
+    if (favorites[id]) { delete favorites[id]; } else { favorites[id] = true; }
     wx.setStorageSync('italian_favorites', favorites);
     this.setData({ favorites }, () => this._applyFilter());
     wx.showToast({ title: favorites[id] ? '已收藏 ⭐' : '已取消收藏', icon: 'none', duration: 1200 });
