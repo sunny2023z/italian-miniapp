@@ -33,7 +33,7 @@ function playItalian(id) {
  */
 function playText(text) {
   const encoded = encodeURIComponent(text);
-  const url = `http://43.162.83.109:3000/tts?text=${encoded}&lang=it`;
+  const url = `https://italian-translate.jellyzen.fun/tts?text=${encoded}&lang=it`;
   _play(url, (e) => {
     console.warn(`在线 TTS 失败 [${text}]:`, e);
   });

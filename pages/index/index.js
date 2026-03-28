@@ -2,7 +2,7 @@
 const { ALL_PHRASES, CATEGORIES } = require('../../data/phrases');
 const { playItalian, playText } = require('../../utils/audio');
 
-const SERVER = 'http://43.162.83.109:3000';
+const SERVER = 'https://italian-translate.jellyzen.fun';
 const TRANSLATE_DEBOUNCE = 800;
 
 Page({
