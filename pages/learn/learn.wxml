@@ -10,22 +10,6 @@
         <text class="hero-subtitle">从零基础到开口说话</text>
       </view>
     </view>
-    <view class="hero-stats">
-      <view class="stat-item">
-        <text class="stat-num">{{totalCompleted}}</text>
-        <text class="stat-label">已完成课程</text>
-      </view>
-      <view class="stat-divider"></view>
-      <view class="stat-item">
-        <text class="stat-num">{{totalVocab}}</text>
-        <text class="stat-label">掌握词汇</text>
-      </view>
-      <view class="stat-divider"></view>
-      <view class="stat-item">
-        <text class="stat-num">{{currentLevelLabel}}</text>
-        <text class="stat-label">当前阶段</text>
-      </view>
-    </view>
   </view>
 
   <scroll-view class="main-scroll" scroll-y="true" enhanced="true" bounces="true">
