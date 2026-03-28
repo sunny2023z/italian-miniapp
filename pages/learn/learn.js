@@ -365,6 +365,7 @@ Page({
     level2Total: LEVEL2_LESSONS.length,
 
     // State
+    showIntro: true,   // 首次打开默认展开
     lessonProgress: {},
     phonicsCompleted: false,
     showPhonics: false,
@@ -404,6 +405,10 @@ Page({
     const { lessonProgress, phonicsCompleted } = this.data;
     const completed = Object.keys(lessonProgress).filter(k => lessonProgress[k]).map(Number);
     wx.setStorageSync('italian_lessons', { completed, phonics: phonicsCompleted });
+  },
+
+  onToggleIntro() {
+    this.setData({ showIntro: !this.data.showIntro });
   },
 
   // ── Phonics ──────────────────────────────────────────────────────────────────

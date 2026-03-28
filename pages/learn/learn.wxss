@@ -1,5 +1,257 @@
 /* pages/learn/learn.wxss */
 
+/* ─── Introduction Card ─────────────────────────────────────────────────────── */
+.intro-card {
+  background: #FFFFFF;
+  margin: 20rpx 24rpx 0;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.07);
+  border-left: 6rpx solid #2E86C1;
+}
+
+.intro-card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.intro-card-left {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.intro-card-icon {
+  font-size: 44rpx;
+  margin-right: 16rpx;
+}
+
+.intro-card-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.intro-card-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1E1008;
+}
+
+.intro-card-subtitle {
+  font-size: 22rpx;
+  color: #6B8BA4;
+  margin-top: 4rpx;
+}
+
+.intro-card-chevron {
+  font-size: 24rpx;
+  color: #9B8070;
+  padding: 8rpx;
+}
+
+.intro-card-body {
+  margin-top: 20rpx;
+}
+
+.intro-section {
+  margin-bottom: 4rpx;
+}
+
+.intro-section-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #2C1810;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.intro-section-text {
+  font-size: 26rpx;
+  color: #4A3828;
+  line-height: 1.7;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.inline-it {
+  color: #C1440E;
+  font-weight: 600;
+}
+
+.intro-divider {
+  height: 1rpx;
+  background: #F0E0D0;
+  margin: 20rpx 0;
+}
+
+.intro-tip {
+  font-size: 24rpx;
+  color: #6B8BA4;
+  line-height: 1.6;
+  display: block;
+  background: #EDF7FF;
+  padding: 12rpx 16rpx;
+  border-radius: 10rpx;
+  margin-top: 8rpx;
+}
+
+/* 句子拆解 */
+.sentence-breakdown {
+  background: #FAF0E6;
+  border-radius: 14rpx;
+  padding: 18rpx;
+  margin-bottom: 16rpx;
+}
+
+.breakdown-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10rpx;
+  margin-bottom: 12rpx;
+}
+
+.breakdown-cell {
+  flex: 1;
+  border-radius: 10rpx;
+  padding: 14rpx 10rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cell-verb    { background: #FDE8E0; border: 2rpx solid #F0A080; }
+.cell-article { background: #E8F0FF; border: 2rpx solid #90B0E8; }
+.cell-noun    { background: #E8F5E0; border: 2rpx solid #90C870; }
+
+.breakdown-word {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #2C1810;
+}
+
+.breakdown-tag {
+  font-size: 18rpx;
+  color: #6B5548;
+  margin-top: 4rpx;
+  text-align: center;
+}
+
+.breakdown-meaning {
+  font-size: 24rpx;
+  color: #6B5548;
+  display: block;
+  text-align: center;
+}
+
+/* 冠词网格 */
+.article-grid {
+  background: #FAF0E6;
+  border-radius: 14rpx;
+  padding: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.article-row {
+  display: flex;
+  flex-direction: row;
+  gap: 12rpx;
+  margin-bottom: 10rpx;
+}
+
+.article-row:last-child { margin-bottom: 0; }
+
+.article-cell {
+  flex: 1;
+  background: #FFFFFF;
+  border-radius: 10rpx;
+  padding: 12rpx 14rpx;
+}
+
+.article-word {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #C1440E;
+  display: block;
+}
+
+.article-cn {
+  font-size: 20rpx;
+  color: #6B5548;
+  margin-top: 4rpx;
+  display: block;
+}
+
+/* 动词变位表 */
+.conjugation-table {
+  background: #FAF0E6;
+  border-radius: 14rpx;
+  padding: 4rpx 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.conj-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 14rpx 0;
+  border-bottom: 1rpx solid #EDD8C8;
+}
+
+.conj-row:last-child { border-bottom: none; }
+
+.conj-person {
+  width: 80rpx;
+  font-size: 24rpx;
+  color: #6B5548;
+}
+
+.conj-form {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #C1440E;
+}
+
+.conj-note {
+  font-size: 20rpx;
+  color: #9B8070;
+  font-style: italic;
+}
+
+/* 课程路径概览 */
+.path-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.path-ov-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #FAF8F5;
+  border-radius: 12rpx;
+  padding: 14rpx 16rpx;
+}
+
+.path-ov-badge {
+  font-size: 18rpx;
+  font-weight: 700;
+  padding: 4rpx 14rpx;
+  border-radius: 16rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.path-ov-text {
+  font-size: 24rpx;
+  color: #4A3828;
+  line-height: 1.5;
+  flex: 1;
+}
+
 /* ─── Base ─────────────────────────────────────────────────────────────────── */
 .page-container {
   display: flex;

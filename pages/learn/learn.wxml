@@ -30,6 +30,130 @@
 
   <scroll-view class="main-scroll" scroll-y="true" enhanced="true" bounces="true">
 
+    <!-- ===== Introduction Card ===== -->
+    <view class="intro-card" bindtap="onToggleIntro">
+      <view class="intro-card-header">
+        <view class="intro-card-left">
+          <text class="intro-card-icon">🧭</text>
+          <view class="intro-card-titles">
+            <text class="intro-card-title">意大利语入门导览</text>
+            <text class="intro-card-subtitle">学前必读 · 2分钟建立语言框架</text>
+          </view>
+        </view>
+        <text class="intro-card-chevron">{{showIntro ? '▲' : '▼'}}</text>
+      </view>
+
+      <view wx:if="{{showIntro}}" class="intro-card-body" catchtap="stopPropagation">
+
+        <!-- 句子结构 -->
+        <view class="intro-section">
+          <text class="intro-section-title">📐 句子结构：和英语很像</text>
+          <text class="intro-section-text">意大利语基本结构是主谓宾，跟中文、英文一样。但有一个关键区别——主语「我/你/他」通常可以省略，因为动词本身的变化已经表达了是谁在说话。</text>
+          <view class="sentence-breakdown">
+            <view class="breakdown-row">
+              <view class="breakdown-cell cell-verb">
+                <text class="breakdown-word">Voglio</text>
+                <text class="breakdown-tag">动词「想要」</text>
+              </view>
+              <view class="breakdown-cell cell-article">
+                <text class="breakdown-word">una</text>
+                <text class="breakdown-tag">冠词「一个」</text>
+              </view>
+              <view class="breakdown-cell cell-noun">
+                <text class="breakdown-word">pizza</text>
+                <text class="breakdown-tag">名词「披萨」</text>
+              </view>
+            </view>
+            <text class="breakdown-meaning">= 我想要一个披萨（主语「我」省略了）</text>
+          </view>
+          <text class="intro-section-text">课程里用的 <text class="inline-it">Vorrei</text>（我想要）是更礼貌的说法，相当于英语的 "I would like"。点餐、购物时都用它。</text>
+        </view>
+
+        <view class="intro-divider"></view>
+
+        <!-- 冠词 -->
+        <view class="intro-section">
+          <text class="intro-section-title">🏷️ 为什么每个名词前都有个词？</text>
+          <text class="intro-section-text">意大利语里名词分「阳性」和「阴性」，冠词（相当于英语的 a / the）要跟名词性别匹配：</text>
+          <view class="article-grid">
+            <view class="article-row">
+              <view class="article-cell">
+                <text class="article-word">un caffè</text>
+                <text class="article-cn">一杯咖啡（阳性）</text>
+              </view>
+              <view class="article-cell">
+                <text class="article-word">una pizza</text>
+                <text class="article-cn">一个披萨（阴性）</text>
+              </view>
+            </view>
+            <view class="article-row">
+              <view class="article-cell">
+                <text class="article-word">il menu</text>
+                <text class="article-cn">那份菜单（阳性定冠词）</text>
+              </view>
+              <view class="article-cell">
+                <text class="article-word">la stazione</text>
+                <text class="article-cn">那个车站（阴性定冠词）</text>
+              </view>
+            </view>
+          </view>
+          <text class="intro-tip">💡 现阶段不用记规则，课程里见到多了自然就有感觉。</text>
+        </view>
+
+        <view class="intro-divider"></view>
+
+        <!-- 动词变位 -->
+        <view class="intro-section">
+          <text class="intro-section-title">🔀 动词会「变形」</text>
+          <text class="intro-section-text">同一个动词，不同的人说时写法不同。这叫「动词变位」。比如「想要」这个动词：</text>
+          <view class="conjugation-table">
+            <view class="conj-row">
+              <text class="conj-person">我</text>
+              <text class="conj-form">voglio</text>
+              <text class="conj-note">主语常省略</text>
+            </view>
+            <view class="conj-row">
+              <text class="conj-person">你</text>
+              <text class="conj-form">vuoi</text>
+              <text class="conj-note"></text>
+            </view>
+            <view class="conj-row">
+              <text class="conj-person">他/她</text>
+              <text class="conj-form">vuole</text>
+              <text class="conj-note"></text>
+            </view>
+          </view>
+          <text class="intro-tip">💡 Level 3 会系统学动词变位，现在只需要记住课程里出现的形式就好。</text>
+        </view>
+
+        <view class="intro-divider"></view>
+
+        <!-- 课程路径说明 -->
+        <view class="intro-section">
+          <text class="intro-section-title">🗺️ 这套课程怎么安排的</text>
+          <view class="path-overview">
+            <view class="path-ov-item">
+              <view class="path-ov-badge badge-0">基础</view>
+              <text class="path-ov-text">发音规则 — 先搞懂意大利字母怎么发音</text>
+            </view>
+            <view class="path-ov-item">
+              <view class="path-ov-badge badge-1">L1</view>
+              <text class="path-ov-text">旅行生存包 — 6课，完成后能独立搞定一次意大利之旅</text>
+            </view>
+            <view class="path-ov-item">
+              <view class="path-ov-badge badge-2">L2</view>
+              <text class="path-ov-text">日常会话 — 6课，能和当地人进行简单日常交流</text>
+            </view>
+            <view class="path-ov-item">
+              <view class="path-ov-badge badge-3">L3</view>
+              <text class="path-ov-text">语言深水区 — 语法骨架，具备自学能力（即将开放）</text>
+            </view>
+          </view>
+        </view>
+
+      </view>
+    </view>
+
     <!-- ===== Level 0: 语言基础 ===== -->
     <view class="level-block">
       <view class="level-header">
