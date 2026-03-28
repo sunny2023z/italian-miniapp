@@ -16,8 +16,17 @@ function _playLocal(filePath) {
     _audioCtx = null;
   }
 
+  // 切换到扬声器输出
+  try {
+    wx.setInnerAudioOption({
+      speakerOn: true,
+      obeyMuteSwitch: false,
+    });
+  } catch (e) {}
+
   const ctx = wx.createInnerAudioContext();
   _audioCtx = ctx;
+  ctx.obeyMuteSwitch = false;  // 静音开关不影响播放
   ctx.src = filePath;
 
   ctx.onCanplay(() => {
