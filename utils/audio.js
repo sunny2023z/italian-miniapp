@@ -33,7 +33,7 @@ function playItalian(id) {
  */
 function playText(text) {
   const encoded = encodeURIComponent(text);
-  const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=it&client=gtx&ttsspeed=0.8`;
+  const url = `http://43.162.83.109:3000/tts?text=${encoded}&lang=it`;
   _play(url, (e) => {
     console.warn(`在线 TTS 失败 [${text}]:`, e);
   });
