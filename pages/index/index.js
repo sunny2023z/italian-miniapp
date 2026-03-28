@@ -11,7 +11,6 @@ Page({
     filteredPhrases: [],
     selectedCat: -1,
     searchText: '',
-    expandedId: -1,
     learned: {},
     favorites: {},
     learnedCount: 0,
@@ -125,8 +124,7 @@ Page({
 
   onCardTap(e) {
     const id = parseInt(e.currentTarget.dataset.id);
-    const expandedId = this.data.expandedId === id ? -1 : id;
-    this.setData({ expandedId });
+    playItalian(id);
   },
 
   onMarkLearned(e) {

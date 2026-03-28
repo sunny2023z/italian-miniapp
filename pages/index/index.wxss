@@ -4,73 +4,13 @@
   flex-direction: column;
   height: 100vh;
   background: #FAF0E6;
+  overflow: hidden;
 }
 
-/* Search Bar */
+/* ── 搜索框 ── */
 .search-bar {
   padding: 16rpx 24rpx 12rpx;
   background: #FFFFFF;
-}
-
-.search-inner {
-  display: flex;
-  align-items: center;
-  background: #F5EDE3;
-  border-radius: 50rpx;
-  padding: 14rpx 24rpx;
-}
-
-.search-loading {
-  font-size: 22rpx;
-  color: #C1440E;
-  letter-spacing: 4rpx;
-  padding: 0 8rpx;
-}
-
-.match-hint {
-  font-size: 22rpx;
-  color: #A08878;
-  padding: 12rpx 24rpx 4rpx;
-}
-
-
-.translate-result-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin: 16rpx 0 12rpx;
-  padding: 16rpx 20rpx;
-  background: #FFF4EE;
-  border-radius: 16rpx;
-  border-left: 4rpx solid #C1440E;
-  gap: 16rpx;
-}
-
-.translate-result-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6rpx;
-}
-
-.translate-label {
-  font-size: 22rpx;
-  color: #8B7265;
-}
-
-.translate-result-text {
-  font-size: 34rpx;
-  font-weight: 700;
-  color: #C1440E;
-  line-height: 1.4;
-}
-
-.translate-tts-btn {
-  font-size: 36rpx;
-  padding: 8rpx 12rpx;
-  border-radius: 12rpx;
-  background: rgba(193, 68, 14, 0.08);
-  flex-shrink: 0;
 }
 
 .search-inner {
@@ -99,17 +39,57 @@
   font-size: 28rpx;
 }
 
+.search-spinner {
+  font-size: 22rpx;
+  color: #C1440E;
+  letter-spacing: 4rpx;
+  padding: 0 8rpx;
+}
+
 .search-clear {
   color: #8B7265;
   font-size: 28rpx;
   padding: 0 6rpx;
 }
 
-/* Category Filter */
+/* 翻译结果 */
+.translate-result-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 12rpx;
+  padding: 16rpx 20rpx;
+  background: #FFF4EE;
+  border-radius: 16rpx;
+  border-left: 4rpx solid #C1440E;
+  gap: 16rpx;
+}
+
+.translate-result-left {
+  flex: 1;
+}
+
+.translate-result-text {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #C1440E;
+  line-height: 1.4;
+}
+
+.translate-tts-btn {
+  font-size: 36rpx;
+  padding: 8rpx 12rpx;
+  border-radius: 12rpx;
+  background: rgba(193, 68, 14, 0.08);
+  flex-shrink: 0;
+}
+
+/* ── 分类筛选 ── */
 .cat-scroll {
   background: #FFFFFF;
   white-space: nowrap;
   padding-bottom: 12rpx;
+  flex-shrink: 0;
 }
 
 .cat-list {
@@ -128,76 +108,38 @@
   color: #8B7265;
   background: #F5EDE3;
   white-space: nowrap;
-  border: 2rpx solid transparent;
   flex-shrink: 0;
 }
 
 .cat-chip.active {
   background: #C1440E;
   color: #FFFFFF;
-  border-color: #C1440E;
   font-weight: 600;
 }
 
-/* Phrase List */
+/* ── 词条列表 ── */
 .phrase-list {
   flex: 1;
-  padding: 16rpx 24rpx;
   overflow: hidden;
 }
 
-/* Phrase Wrapper for swipe */
 .phrase-wrapper {
-  position: relative;
-  margin-bottom: 16rpx;
-  border-radius: 16rpx;
-  overflow: hidden;
+  padding: 0 24rpx;
+  margin-bottom: 12rpx;
 }
 
-/* Swipe Action Buttons */
-.swipe-actions {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: row;
-  z-index: 1;
+.phrase-wrapper:first-child {
+  margin-top: 16rpx;
 }
 
-.swipe-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 120rpx;
-  font-size: 36rpx;
-}
-
-.swipe-btn-text {
-  font-size: 22rpx;
-  margin-top: 4rpx;
-  color: #FFFFFF;
-}
-
-.fav-btn {
-  background: #F0A020;
-}
-
-.learn-btn {
-  background: #6B7C3B;
-}
-
-/* Phrase Card */
+/* 卡片：点击播放 */
 .phrase-card {
   background: #FFFFFF;
   border-radius: 16rpx;
-  padding: 24rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.08);
-  position: relative;
-  z-index: 2;
-  transition: transform 0.2s ease;
+  padding: 20rpx 20rpx 16rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.06);
   border-left: 6rpx solid transparent;
+  active-opacity: 0.7;
 }
 
 .phrase-card.learned {
@@ -208,21 +150,10 @@
   border-left-color: #F0A020;
 }
 
-.phrase-card.expanded {
-  box-shadow: 0 4rpx 24rpx rgba(193,68,14,0.15);
-}
-
-.phrase-card.swiped {
-  transform: translateX(-240rpx);
-}
-
-/* Card Header */
-.card-header {
+.card-body {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 8rpx;
+  align-items: center;
 }
 
 .card-main {
@@ -230,7 +161,7 @@
 }
 
 .italian-text {
-  font-size: 40rpx;
+  font-size: 36rpx;
   font-weight: 700;
   color: #C1440E;
   display: block;
@@ -238,101 +169,71 @@
 }
 
 .pronunciation-text {
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: #8B7265;
   font-style: italic;
   display: block;
+  margin-bottom: 6rpx;
 }
 
-.card-right {
+.chinese-text {
+  font-size: 28rpx;
+  color: #2C1810;
+  display: block;
+}
+
+/* 右侧操作：收藏 + 已学 */
+.card-actions {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 8rpx;
+  align-items: center;
+  gap: 16rpx;
+  padding-left: 20rpx;
 }
 
-.tts-btn {
-  font-size: 36rpx;
-  padding: 6rpx;
-}
-
-.status-icons {
+.action-icon {
+  font-size: 40rpx;
+  width: 64rpx;
+  height: 64rpx;
   display: flex;
-  gap: 6rpx;
-  font-size: 24rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
-.learned-icon {
+.fav-off {
+  color: #D0C0B0;
+}
+
+.fav-on {
+  color: #F0A020;
+}
+
+.learned-off {
+  font-size: 34rpx;
+  color: #D0C0B0;
+}
+
+.learned-on {
+  font-size: 34rpx;
   color: #6B7C3B;
   font-weight: 700;
 }
 
-/* Chinese Text */
-.chinese-text {
-  font-size: 30rpx;
-  color: #2C1810;
-  display: block;
-}
-
-/* Card Details (expanded) */
-.card-details {
-  margin-top: 16rpx;
-}
-
-.divider {
-  height: 1rpx;
-  background: #F0E0D0;
-  margin-bottom: 16rpx;
-}
-
-.tip-row {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 16rpx;
-}
-
-.tip-label {
-  font-size: 24rpx;
-  flex-shrink: 0;
+/* Tip */
+.card-tip {
+  margin-top: 10rpx;
+  padding-top: 10rpx;
+  border-top: 1rpx solid #F0E0D0;
 }
 
 .tip-text {
-  font-size: 24rpx;
-  color: #6B7265;
-  line-height: 1.6;
-  flex: 1;
+  font-size: 22rpx;
+  color: #8B7265;
+  line-height: 1.5;
 }
 
-.action-row {
-  display: flex;
-  flex-direction: row;
-  gap: 16rpx;
-}
-
-.action-btn {
-  flex: 1;
-  text-align: center;
-  padding: 14rpx;
-  border-radius: 12rpx;
-  font-size: 24rpx;
-  background: #F5EDE3;
-  color: #2C1810;
-  border: 2rpx solid #E0C8B0;
-}
-
-.action-btn.active {
-  background: #FFF3E8;
-  border-color: #C1440E;
-  color: #C1440E;
-}
-
-.action-btn.active.green {
-  background: #EBF0E0;
-  border-color: #6B7C3B;
-  color: #6B7C3B;
-}
-
-/* Stats Bar */
+/* ── 底部统计 ── */
 .stats-bar {
   display: flex;
   flex-direction: row;
@@ -355,13 +256,8 @@
   color: #2C1810;
 }
 
-.stat-num.primary {
-  color: #C1440E;
-}
-
-.stat-num.gold {
-  color: #D4920A;
-}
+.stat-num.primary { color: #C1440E; }
+.stat-num.gold    { color: #D4920A; }
 
 .stat-label {
   font-size: 22rpx;
@@ -375,6 +271,7 @@
   background: #E8D5C4;
 }
 
+/* ── 空状态 ── */
 .empty-state {
   display: flex;
   flex-direction: column;

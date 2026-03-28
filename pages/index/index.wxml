@@ -12,11 +12,10 @@
         value="{{searchText}}"
         bindinput="onSearchInput"
       />
-      <view wx:if="{{translateLoading}}" class="search-spinner">·  ·  ·</view>
+      <view wx:if="{{translateLoading}}" class="search-spinner">···</view>
       <view wx:elif="{{searchText}}" class="search-clear" catchtap="onSearchClear">✕</view>
     </view>
-
-    <!-- 翻译结果：有输入就展示 -->
+    <!-- 翻译结果 -->
     <view wx:if="{{translateResult}}" class="translate-result-row">
       <view class="translate-result-left">
         <text class="translate-result-text">{{translateResult}}</text>
@@ -40,57 +39,53 @@
   <!-- Phrase List -->
   <scroll-view class="phrase-list" scroll-y="true" enhanced="true" bounces="true">
 
-    <!-- 有输入但词条为空时，不显示"没找到"（翻译结果已经在上面了） -->
     <view wx:if="{{filteredPhrases.length === 0 && !searchText}}" class="empty-state">
       <text class="emoji">🇮🇹</text>
       <text class="text">输入词汇开始搜索或翻译</text>
     </view>
 
-    <view wx:if="{{filteredPhrases.length > 0 && searchText}}" class="match-hint">
-      速查词条匹配到 {{filteredPhrases.length}} 条
+    <view wx:if="{{filteredPhrases.length === 0 && searchText && !translateLoading}}" class="empty-state">
+      <text class="emoji">🔍</text>
+      <text class="text">没有匹配的速查词条</text>
     </view>
 
     <view wx:for="{{filteredPhrases}}" wx:key="id" class="phrase-wrapper">
+      <!-- 点卡片 = 播放发音 -->
       <view
-        class="phrase-card {{item.isLearned ? 'learned' : ''}} {{item.isFav ? 'faved' : ''}} {{expandedId === item.id ? 'expanded' : ''}}"
+        class="phrase-card {{item.isLearned ? 'learned' : ''}} {{item.isFav ? 'faved' : ''}}"
         bindtap="onCardTap"
         data-id="{{item.id}}"
       >
-        <view class="card-header">
+        <!-- 主体内容 -->
+        <view class="card-body">
           <view class="card-main">
             <text class="italian-text">{{item.italian}}</text>
             <text class="pronunciation-text">{{item.pronunciation}}</text>
+            <text class="chinese-text">{{item.chinese}}</text>
           </view>
-          <view class="card-right">
-            <view class="tts-btn" catchtap="onTTSTap" data-id="{{item.id}}">🔊</view>
-            <view class="status-icons">
-              <text wx:if="{{item.isFav}}">⭐</text>
-              <text wx:if="{{item.isLearned}}" class="learned-icon">✓</text>
-            </view>
+          <!-- 右侧操作：收藏 + 已学 -->
+          <view class="card-actions">
+            <view
+              class="action-icon {{item.isFav ? 'fav-on' : 'fav-off'}}"
+              catchtap="onToggleFav"
+              data-id="{{item.id}}"
+            >{{item.isFav ? '⭐' : '☆'}}</view>
+            <view
+              class="action-icon {{item.isLearned ? 'learned-on' : 'learned-off'}}"
+              catchtap="onMarkLearned"
+              data-id="{{item.id}}"
+            >{{item.isLearned ? '✓' : '○'}}</view>
           </view>
         </view>
 
-        <text class="chinese-text">{{item.chinese}}</text>
-
-        <view class="card-details" wx:if="{{expandedId === item.id}}">
-          <view class="divider"></view>
-          <view class="tip-row">
-            <text class="tip-label">💡 </text>
-            <text class="tip-text">{{item.tip}}</text>
-          </view>
-          <view class="action-row">
-            <view class="action-btn {{item.isFav ? 'active' : ''}}" catchtap="onToggleFav" data-id="{{item.id}}">
-              {{item.isFav ? '⭐ 已收藏' : '☆ 收藏'}}
-            </view>
-            <view class="action-btn {{item.isLearned ? 'active green' : ''}}" catchtap="onMarkLearned" data-id="{{item.id}}">
-              {{item.isLearned ? '✓ 已学会' : '○ 标为已学'}}
-            </view>
-          </view>
+        <!-- tip：固定展示，不需要展开 -->
+        <view wx:if="{{item.tip}}" class="card-tip">
+          <text class="tip-text">💡 {{item.tip}}</text>
         </view>
       </view>
     </view>
 
-    <view style="height: 100rpx;"></view>
+    <view style="height: 120rpx;"></view>
   </scroll-view>
 
   <!-- Bottom Stats -->
