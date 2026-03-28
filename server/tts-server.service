@@ -1,0 +1,17 @@
+[Unit]
+Description=Italian Miniapp TTS Server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/italian-miniapp/server
+ExecStart=/usr/bin/node tts-server.js
+Restart=on-failure
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=tts-server
+
+[Install]
+WantedBy=multi-user.target
