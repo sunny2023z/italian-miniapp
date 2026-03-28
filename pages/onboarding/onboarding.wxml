@@ -1,0 +1,75 @@
+<!-- pages/onboarding/onboarding.wxml -->
+<view class="container">
+  <swiper
+    class="swiper"
+    current="{{current}}"
+    bindchange="onSwiperChange"
+    duration="400"
+    easing-function="easeInOutCubic"
+  >
+    <!-- 第一屏 -->
+    <swiper-item class="slide">
+      <view class="slide-inner">
+        <view class="emoji-wrap">
+          <text class="main-emoji">🇮🇹</text>
+        </view>
+        <text class="slide-title">去意大利，不用慌</text>
+        <text class="slide-desc">收录旅行常用短语\n点一下就能听发音</text>
+        <view class="tag-row">
+          <view class="tag">餐厅点餐</view>
+          <view class="tag">问路打车</view>
+          <view class="tag">购物砍价</view>
+        </view>
+      </view>
+    </swiper-item>
+
+    <!-- 第二屏 -->
+    <swiper-item class="slide">
+      <view class="slide-inner">
+        <view class="emoji-wrap">
+          <text class="main-emoji">🔍</text>
+        </view>
+        <text class="slide-title">不会说？搜一搜</text>
+        <text class="slide-desc">输入中文，自动翻译成意大利语\n再陌生的场景也能开口</text>
+        <view class="demo-card">
+          <text class="demo-zh">我对坚果过敏</text>
+          <text class="demo-arrow">↓</text>
+          <text class="demo-it">Sono allergico alle noci 🔊</text>
+        </view>
+      </view>
+    </swiper-item>
+
+    <!-- 第三屏 -->
+    <swiper-item class="slide">
+      <view class="slide-inner">
+        <view class="emoji-wrap">
+          <text class="main-emoji">⭐</text>
+        </view>
+        <text class="slide-title">用过的，收起来</text>
+        <text class="slide-desc">收藏高频用语\n下次出行，打开就用</text>
+        <view class="cta-wrap">
+          <view class="btn-start" bindtap="onStart">
+            <text class="btn-text">开始使用</text>
+            <text class="btn-arrow">→</text>
+          </view>
+          <text class="skip-hint">已经了解？直接进入</text>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <!-- 底部指示点 + 按钮 -->
+  <view class="footer">
+    <view class="dots">
+      <view class="dot {{current === 0 ? 'active' : ''}}" />
+      <view class="dot {{current === 1 ? 'active' : ''}}" />
+      <view class="dot {{current === 2 ? 'active' : ''}}" />
+    </view>
+    <view wx:if="{{current < 2}}" class="btn-next" bindtap="onNext">
+      <text class="btn-next-text">下一步</text>
+    </view>
+    <view wx:else class="btn-next btn-next-ghost" bindtap="onStart">
+      <text class="btn-next-text">进入应用</text>
+    </view>
+  </view>
+</view>
