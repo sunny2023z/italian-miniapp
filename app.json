@@ -8,8 +8,8 @@
   "subpackages": [
     {
       "root": "audio-pkg",
-      "name": "audio",
-      "pages": []
+      "name": "audio-pkg",
+      "pages": ["pages/placeholder/placeholder"]
     }
   ],
   "preloadRule": {
