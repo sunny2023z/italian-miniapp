@@ -323,20 +323,10 @@ function computeStats(lessonProgress, phonicsCompleted) {
   if (level2Completed > 0) currentLevelLabel = 'L2';
   if (level2Completed === LEVEL2_LESSONS.length) currentLevelLabel = 'L3';
 
-  // Pre-compute which lesson IDs are unlocked (for WXML binding)
+  // Pre-compute which lesson IDs are unlocked (now: ALL unlocked, no forced order)
   const unlockedIds = {};
-  LEVEL1_LESSONS.forEach((l, idx) => {
-    if (idx === 0 || lessonProgress[LEVEL1_LESSONS[idx - 1].id]) {
-      unlockedIds[l.id] = true;
-    }
-  });
-  if (allL1Done) {
-    LEVEL2_LESSONS.forEach((l, idx) => {
-      if (idx === 0 || lessonProgress[LEVEL2_LESSONS[idx - 1].id]) {
-        unlockedIds[l.id] = true;
-      }
-    });
-  }
+  LEVEL1_LESSONS.forEach(l => { unlockedIds[l.id] = true; });
+  LEVEL2_LESSONS.forEach(l => { unlockedIds[l.id] = true; });
 
   return {
     totalCompleted,
@@ -365,7 +355,9 @@ Page({
     level2Total: LEVEL2_LESSONS.length,
 
     // State
-    showIntro: true,   // 首次打开默认展开
+    showIntro: false,   // 导览默认折叠
+    showLevel1: true,
+    showLevel2: true,
     lessonProgress: {},
     phonicsCompleted: false,
     showPhonics: false,
@@ -409,6 +401,14 @@ Page({
 
   onToggleIntro() {
     this.setData({ showIntro: !this.data.showIntro });
+  },
+
+  onToggleLevel1() {
+    this.setData({ showLevel1: !this.data.showLevel1 });
+  },
+
+  onToggleLevel2() {
+    this.setData({ showLevel2: !this.data.showLevel2 });
   },
 
   // ── Phonics ──────────────────────────────────────────────────────────────────

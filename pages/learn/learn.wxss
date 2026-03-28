@@ -414,6 +414,13 @@
   font-size: 30rpx;
 }
 
+.level-chevron {
+  font-size: 22rpx;
+  color: #9B8070;
+  margin-left: 10rpx;
+  padding: 4rpx;
+}
+
 /* Level Progress Bar */
 .level-progress-bar {
   height: 8rpx;
@@ -591,16 +598,13 @@
 
 .node-icon {
   font-size: 28rpx;
-  color: #FFFFFF;
+  color: #C1440E;
   line-height: 1;
 }
 
-.node-available .node-icon {
-  color: #C1440E;
-}
-
-.node-locked .node-icon {
-  color: #AAA;
+.done-icon {
+  color: #FFFFFF;
+  font-weight: 700;
 }
 
 .node-label {

@@ -188,48 +188,47 @@
     <!-- ===== Level 1: 旅行生存包 ===== -->
     <view class="level-connector"></view>
     <view class="level-block">
-      <view class="level-header">
+      <view class="level-header" bindtap="onToggleLevel1">
         <view class="level-badge badge-1">Level 1</view>
         <view class="level-header-text">
           <text class="level-title">旅行生存包</text>
           <text class="level-desc">完成后能独立搞定一次意大利之旅</text>
         </view>
         <text class="level-progress-text">{{level1Completed}}/{{level1Total}}</text>
+        <text class="level-chevron">{{showLevel1 ? '▲' : '▼'}}</text>
       </view>
 
-      <!-- Level 1 Progress Bar -->
-      <view class="level-progress-bar">
-        <view class="level-progress-fill fill-1" style="width: {{level1Completed / level1Total * 100}}%"></view>
-      </view>
-
-      <!-- Path Nodes -->
-      <view class="path-container">
-        <view wx:for="{{level1Lessons}}" wx:key="id" class="path-node-wrap">
-          <!-- Connector line (not for first) -->
-          <view wx:if="{{index > 0}}" class="node-connector {{lessonProgress[level1Lessons[index-1].id] ? 'connector-done' : ''}}"></view>
-
-          <view
-            class="path-node {{lessonProgress[item.id] ? 'node-done' : ''}} {{!unlockedIds[item.id] ? 'node-locked' : 'node-available'}}"
-            bindtap="onLessonTap"
-            data-id="{{item.id}}"
-            data-level="1"
-          >
-            <view class="node-circle">
-              <text wx:if="{{lessonProgress[item.id]}}" class="node-icon">✓</text>
-              <text wx:elif="{{!unlockedIds[item.id]}}" class="node-icon">🔒</text>
-              <text wx:else class="node-icon">{{item.emoji}}</text>
-            </view>
-            <text class="node-label">{{item.title}}</text>
-            <text class="node-meta">{{item.vocab.length}}词 · {{item.time}}</text>
-          </view>
+      <view wx:if="{{showLevel1}}">
+        <!-- Level 1 Progress Bar -->
+        <view class="level-progress-bar">
+          <view class="level-progress-fill fill-1" style="width: {{level1Completed / level1Total * 100}}%"></view>
         </view>
 
-        <!-- Level 1 Finish Flag -->
-        <view wx:if="{{level1Completed === level1Total}}" class="path-finish">
-          <view class="node-connector connector-done"></view>
-          <view class="finish-flag">
-            <text class="finish-icon">🏆</text>
-            <text class="finish-text">旅行生存包完成！</text>
+        <!-- Path Nodes -->
+        <view class="path-container">
+          <view wx:for="{{level1Lessons}}" wx:key="id" class="path-node-wrap">
+            <view wx:if="{{index > 0}}" class="node-connector {{lessonProgress[level1Lessons[index-1].id] ? 'connector-done' : ''}}"></view>
+            <view
+              class="path-node {{lessonProgress[item.id] ? 'node-done' : 'node-available'}}"
+              bindtap="onLessonTap"
+              data-id="{{item.id}}"
+            >
+              <view class="node-circle">
+                <text wx:if="{{lessonProgress[item.id]}}" class="node-icon done-icon">✓</text>
+                <text wx:else class="node-icon">{{item.emoji}}</text>
+              </view>
+              <text class="node-label">{{item.title}}</text>
+              <text class="node-meta">{{item.vocab.length}}词 · {{item.time}}</text>
+            </view>
+          </view>
+
+          <!-- Level 1 Finish Flag -->
+          <view wx:if="{{level1Completed === level1Total}}" class="path-finish">
+            <view class="node-connector connector-done"></view>
+            <view class="finish-flag">
+              <text class="finish-icon">🏆</text>
+              <text class="finish-text">旅行生存包完成！</text>
+            </view>
           </view>
         </view>
       </view>
@@ -237,42 +236,38 @@
 
     <!-- ===== Level 2: 日常会话 ===== -->
     <view class="level-connector"></view>
-    <view class="level-block {{level1Completed < level1Total ? 'level-locked' : ''}}">
-      <view class="level-header">
+    <view class="level-block">
+      <view class="level-header" bindtap="onToggleLevel2">
         <view class="level-badge badge-2">Level 2</view>
         <view class="level-header-text">
           <text class="level-title">日常会话</text>
           <text class="level-desc">跟当地人进行简单对话</text>
         </view>
-        <text wx:if="{{level1Completed < level1Total}}" class="level-lock-icon">🔒</text>
-        <text wx:else class="level-progress-text">{{level2Completed}}/{{level2Total}}</text>
+        <text class="level-progress-text">{{level2Completed}}/{{level2Total}}</text>
+        <text class="level-chevron">{{showLevel2 ? '▲' : '▼'}}</text>
       </view>
 
-      <view wx:if="{{level1Completed < level1Total}}" class="unlock-hint">
-        完成 Level 1 全部课程后解锁
-      </view>
-
-      <view wx:else class="path-container">
+      <view wx:if="{{showLevel2}}">
         <!-- Level 2 Progress Bar -->
-        <view class="level-progress-bar" style="margin-bottom: 24rpx;">
+        <view class="level-progress-bar" style="margin-top: 16rpx; margin-bottom: 24rpx;">
           <view class="level-progress-fill fill-2" style="width: {{level2Completed / level2Total * 100}}%"></view>
         </view>
 
-        <view wx:for="{{level2Lessons}}" wx:key="id" class="path-node-wrap">
-          <view wx:if="{{index > 0}}" class="node-connector {{lessonProgress[level2Lessons[index-1].id] ? 'connector-done' : ''}}"></view>
-          <view
-            class="path-node {{lessonProgress[item.id] ? 'node-done' : ''}} {{!unlockedIds[item.id] ? 'node-locked' : 'node-available'}}"
-            bindtap="onLessonTap"
-            data-id="{{item.id}}"
-            data-level="2"
-          >
-            <view class="node-circle">
-              <text wx:if="{{lessonProgress[item.id]}}" class="node-icon">✓</text>
-              <text wx:elif="{{!unlockedIds[item.id]}}" class="node-icon">🔒</text>
-              <text wx:else class="node-icon">{{item.emoji}}</text>
+        <view class="path-container">
+          <view wx:for="{{level2Lessons}}" wx:key="id" class="path-node-wrap">
+            <view wx:if="{{index > 0}}" class="node-connector {{lessonProgress[level2Lessons[index-1].id] ? 'connector-done' : ''}}"></view>
+            <view
+              class="path-node {{lessonProgress[item.id] ? 'node-done' : 'node-available'}}"
+              bindtap="onLessonTap"
+              data-id="{{item.id}}"
+            >
+              <view class="node-circle">
+                <text wx:if="{{lessonProgress[item.id]}}" class="node-icon done-icon">✓</text>
+                <text wx:else class="node-icon">{{item.emoji}}</text>
+              </view>
+              <text class="node-label">{{item.title}}</text>
+              <text class="node-meta">{{item.vocab.length}}词 · {{item.time}}</text>
             </view>
-            <text class="node-label">{{item.title}}</text>
-            <text class="node-meta">{{item.vocab.length}}词 · {{item.time}}</text>
           </view>
         </view>
       </view>
