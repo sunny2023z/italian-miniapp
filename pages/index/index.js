@@ -3,6 +3,7 @@ const { ALL_PHRASES, CATEGORIES } = require('../../data/phrases');
 const { playItalian, playText } = require('../../utils/audio');
 
 const SERVER = 'http://43.162.83.109:3000';
+const TRANSLATE_DEBOUNCE = 800;
 
 Page({
   data: {
@@ -14,6 +15,8 @@ Page({
     translateResult: '',
     translateLoading: false,
   },
+
+  _timer: null,
 
   onLoad() {
     this._loadState();
@@ -50,20 +53,24 @@ Page({
     this.setData({ filteredPhrases: list });
   },
 
-  // 实时输入：只过滤词条，不触发翻译
   onSearchInput(e) {
     const val = e.detail.value;
     this.setData({ searchText: val, translateResult: '' }, () => this._applyFilter());
+    if (this._timer) clearTimeout(this._timer);
+    if (!val.trim()) {
+      this.setData({ translateLoading: false });
+      return;
+    }
+    this.setData({ translateLoading: true });
+    this._timer = setTimeout(() => this._doTranslate(val.trim()), TRANSLATE_DEBOUNCE);
   },
 
-  // 回车/确认：触发翻译
-  onSearchConfirm(e) {
-    const val = e.detail.value;
-    if (val.trim()) this._doTranslate(val.trim());
+  onSearchClear() {
+    if (this._timer) clearTimeout(this._timer);
+    this.setData({ searchText: '', translateResult: '', translateLoading: false }, () => this._applyFilter());
   },
 
   _doTranslate(text) {
-    this.setData({ translateLoading: true, translateResult: '' });
     const isChinese = /[\u4e00-\u9fa5]/.test(text);
     wx.request({
       url: `${SERVER}/translate`,
@@ -73,13 +80,9 @@ Page({
           this.setData({ translateResult: res.data.result });
         }
       },
-      fail: () => wx.showToast({ title: '翻译失败，请检查网络', icon: 'none' }),
+      fail: () => {},
       complete: () => this.setData({ translateLoading: false }),
     });
-  },
-
-  onSearchClear() {
-    this.setData({ searchText: '', translateResult: '', translateLoading: false }, () => this._applyFilter());
   },
 
   onPlayTranslateResult() {
