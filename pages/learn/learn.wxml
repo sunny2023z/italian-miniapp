@@ -1,179 +1,281 @@
 <!-- pages/learn/learn.wxml -->
 <view class="page-container">
 
-  <!-- Tab Switcher -->
-  <view class="tab-bar">
-    <view class="tab-item {{activeTab === 0 ? 'active' : ''}}" bindtap="onTabSwitch" data-tab="0">🔤 字母发音</view>
-    <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" bindtap="onTabSwitch" data-tab="1">📚 每日课程</view>
+  <!-- ===== Hero Section ===== -->
+  <view class="hero-section">
+    <view class="hero-content">
+      <text class="hero-flag">🇮🇹</text>
+      <view class="hero-text">
+        <text class="hero-title">意大利语学习路径</text>
+        <text class="hero-subtitle">从旅行短语到流利会话</text>
+      </view>
+    </view>
+    <view class="hero-stats">
+      <view class="stat-item">
+        <text class="stat-num">{{totalCompleted}}</text>
+        <text class="stat-label">已完成课程</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-num">{{totalVocab}}</text>
+        <text class="stat-label">掌握词汇</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-num">{{currentLevelLabel}}</text>
+        <text class="stat-label">当前阶段</text>
+      </view>
+    </view>
   </view>
 
-  <!-- ===== TAB 0: 字母发音 ===== -->
-  <scroll-view wx:if="{{activeTab === 0}}" class="content-scroll" scroll-y="true">
+  <scroll-view class="main-scroll" scroll-y="true" enhanced="true" bounces="true">
 
-    <!-- Intro Card -->
-    <view class="intro-card">
-      <text class="intro-emoji">🇮🇹</text>
-      <text class="intro-title">意大利语发音指南</text>
-      <text class="intro-desc">意大利语发音规则非常规律！掌握以下规则，就能读出大部分意大利单词。</text>
-    </view>
-
-    <!-- Vowels Section -->
-    <view class="section-header">五个元音</view>
-    <view class="vowels-grid">
-      <view
-        wx:for="{{vowels}}"
-        wx:key="letter"
-        class="vowel-card"
-        bindtap="onVowelTap"
-        data-letter="{{item.letter}}"
-        data-phonetic="{{item.phonetic}}"
-      >
-        <text class="vowel-letter">{{item.letter}}</text>
-        <text class="vowel-phonetic">{{item.phonetic}}</text>
-        <text class="vowel-example">{{item.example}}</text>
-      </view>
-    </view>
-
-    <!-- Consonant Rules -->
-    <view class="section-header">发音规则</view>
-    <view
-      wx:for="{{consonantRules}}"
-      wx:key="title"
-      class="rule-card"
-    >
-      <view class="rule-card-header">
-        <text class="rule-icon">{{item.icon}}</text>
-        <text class="rule-title">{{item.title}}</text>
-      </view>
-      <view
-        wx:for="{{item.rules}}"
-        wx:for-item="rule"
-        wx:key="pattern"
-        class="rule-row"
-      >
-        <view class="rule-pattern">
-          <text class="pattern-text">{{rule.pattern}}</text>
-          <text class="pattern-arrow">→</text>
-          <text class="pattern-sound">{{rule.sound}}</text>
+    <!-- ===== Level 0: 语言基础 ===== -->
+    <view class="level-block">
+      <view class="level-header">
+        <view class="level-badge badge-0">基础</view>
+        <view class="level-header-text">
+          <text class="level-title">发音入门</text>
+          <text class="level-desc">先搞懂意大利语的声音系统</text>
         </view>
-        <text class="rule-example">例：{{rule.example}}</text>
+        <text class="level-check {{phonicsCompleted ? 'done' : ''}}">{{phonicsCompleted ? '✅' : ''}}</text>
+      </view>
+
+      <view class="phonics-card" bindtap="onOpenPhonics">
+        <view class="phonics-left">
+          <view class="phonics-icon-bg">
+            <text class="phonics-icon">🔤</text>
+          </view>
+          <view class="phonics-info">
+            <text class="phonics-name">字母 & 发音规则</text>
+            <text class="phonics-hint">21个字母 · 7条核心规则 · 发音贴士</text>
+          </view>
+        </view>
+        <view class="phonics-action">
+          <text class="phonics-arrow">{{phonicsCompleted ? '复习 ›' : '开始 ›'}}</text>
+        </view>
+      </view>
+
+      <view wx:if="{{!phonicsCompleted}}" class="level-tip">
+        💡 建议先完成发音入门，再开始课程学习
       </view>
     </view>
 
-    <!-- Full Alphabet -->
-    <view class="section-header">完整字母表（21字母）</view>
-    <view class="alphabet-note">意大利字母表没有 J、K、W、X、Y（这5个只用于外来词）</view>
-    <view class="alphabet-grid">
-      <view
-        wx:for="{{alphabet}}"
-        wx:key="letter"
-        class="alpha-item"
-        bindtap="onLetterTap"
-        data-letter="{{item.letter}}"
-        data-phonetic="{{item.phonetic}}"
-      >
-        <text class="alpha-letter">{{item.letter}}</text>
-        <text class="alpha-name">{{item.name}}</text>
-        <text class="alpha-phonetic">{{item.phonetic}}</text>
-        <view class="alpha-tts-btn" catchtap="onLetterTTSTap" data-letter="{{item.letter}}">🔊</view>
+    <!-- ===== Level 1: 旅行生存包 ===== -->
+    <view class="level-connector"></view>
+    <view class="level-block">
+      <view class="level-header">
+        <view class="level-badge badge-1">Level 1</view>
+        <view class="level-header-text">
+          <text class="level-title">旅行生存包</text>
+          <text class="level-desc">完成后能独立搞定一次意大利之旅</text>
+        </view>
+        <text class="level-progress-text">{{level1Completed}}/{{level1Total}}</text>
+      </view>
+
+      <!-- Level 1 Progress Bar -->
+      <view class="level-progress-bar">
+        <view class="level-progress-fill fill-1" style="width: {{level1Completed / level1Total * 100}}%"></view>
+      </view>
+
+      <!-- Path Nodes -->
+      <view class="path-container">
+        <view wx:for="{{level1Lessons}}" wx:key="id" class="path-node-wrap">
+          <!-- Connector line (not for first) -->
+          <view wx:if="{{index > 0}}" class="node-connector {{lessonProgress[level1Lessons[index-1].id] ? 'connector-done' : ''}}"></view>
+
+          <view
+            class="path-node {{lessonProgress[item.id] ? 'node-done' : ''}} {{!unlockedIds[item.id] ? 'node-locked' : 'node-available'}}"
+            bindtap="onLessonTap"
+            data-id="{{item.id}}"
+            data-level="1"
+          >
+            <view class="node-circle">
+              <text wx:if="{{lessonProgress[item.id]}}" class="node-icon">✓</text>
+              <text wx:elif="{{!unlockedIds[item.id]}}" class="node-icon">🔒</text>
+              <text wx:else class="node-icon">{{item.emoji}}</text>
+            </view>
+            <text class="node-label">{{item.title}}</text>
+            <text class="node-meta">{{item.vocab.length}}词 · {{item.time}}</text>
+          </view>
+        </view>
+
+        <!-- Level 1 Finish Flag -->
+        <view wx:if="{{level1Completed === level1Total}}" class="path-finish">
+          <view class="node-connector connector-done"></view>
+          <view class="finish-flag">
+            <text class="finish-icon">🏆</text>
+            <text class="finish-text">旅行生存包完成！</text>
+          </view>
+        </view>
       </view>
     </view>
 
-    <!-- Tips Section -->
-    <view class="section-header">发音小贴士</view>
-    <view class="tips-card">
-      <view class="tip-item">
-        <text class="tip-dot">•</text>
-        <text class="tip-content">每个元音都要清晰发音，不吞音</text>
+    <!-- ===== Level 2: 日常会话 ===== -->
+    <view class="level-connector"></view>
+    <view class="level-block {{level1Completed < level1Total ? 'level-locked' : ''}}">
+      <view class="level-header">
+        <view class="level-badge badge-2">Level 2</view>
+        <view class="level-header-text">
+          <text class="level-title">日常会话</text>
+          <text class="level-desc">跟当地人进行简单对话</text>
+        </view>
+        <text wx:if="{{level1Completed < level1Total}}" class="level-lock-icon">🔒</text>
+        <text wx:else class="level-progress-text">{{level2Completed}}/{{level2Total}}</text>
       </view>
-      <view class="tip-item">
-        <text class="tip-dot">•</text>
-        <text class="tip-content">R 要弹舌，像漱口的感觉</text>
+
+      <view wx:if="{{level1Completed < level1Total}}" class="unlock-hint">
+        完成 Level 1 全部课程后解锁
       </view>
-      <view class="tip-item">
-        <text class="tip-dot">•</text>
-        <text class="tip-content">双辅音（如PP、TT）要稍微延长</text>
-      </view>
-      <view class="tip-item">
-        <text class="tip-dot">•</text>
-        <text class="tip-content">重音通常在倒数第二个音节</text>
-      </view>
-      <view class="tip-item">
-        <text class="tip-dot">•</text>
-        <text class="tip-content">多听多读，语感会越来越好！</text>
+
+      <view wx:else class="path-container">
+        <!-- Level 2 Progress Bar -->
+        <view class="level-progress-bar" style="margin-bottom: 24rpx;">
+          <view class="level-progress-fill fill-2" style="width: {{level2Completed / level2Total * 100}}%"></view>
+        </view>
+
+        <view wx:for="{{level2Lessons}}" wx:key="id" class="path-node-wrap">
+          <view wx:if="{{index > 0}}" class="node-connector {{lessonProgress[level2Lessons[index-1].id] ? 'connector-done' : ''}}"></view>
+          <view
+            class="path-node {{lessonProgress[item.id] ? 'node-done' : ''}} {{!unlockedIds[item.id] ? 'node-locked' : 'node-available'}}"
+            bindtap="onLessonTap"
+            data-id="{{item.id}}"
+            data-level="2"
+          >
+            <view class="node-circle">
+              <text wx:if="{{lessonProgress[item.id]}}" class="node-icon">✓</text>
+              <text wx:elif="{{!unlockedIds[item.id]}}" class="node-icon">🔒</text>
+              <text wx:else class="node-icon">{{item.emoji}}</text>
+            </view>
+            <text class="node-label">{{item.title}}</text>
+            <text class="node-meta">{{item.vocab.length}}词 · {{item.time}}</text>
+          </view>
+        </view>
       </view>
     </view>
+
+    <!-- ===== Level 3: 语言深水区 ===== -->
+    <view class="level-connector"></view>
+    <view class="level-block level-locked level-teaser">
+      <view class="level-header">
+        <view class="level-badge badge-3">Level 3</view>
+        <view class="level-header-text">
+          <text class="level-title">语言深水区</text>
+          <text class="level-desc">掌握语法骨架，具备自学能力</text>
+        </view>
+        <text class="level-lock-icon">🔒</text>
+      </view>
+      <view class="teaser-grid">
+        <view class="teaser-item">
+          <text class="teaser-emoji">🔀</text>
+          <text class="teaser-name">动词变位</text>
+        </view>
+        <view class="teaser-item">
+          <text class="teaser-emoji">⚤</text>
+          <text class="teaser-name">名词阴阳性</text>
+        </view>
+        <view class="teaser-item">
+          <text class="teaser-emoji">🔗</text>
+          <text class="teaser-name">常用介词</text>
+        </view>
+        <view class="teaser-item">
+          <text class="teaser-emoji">💬</text>
+          <text class="teaser-name">情态动词</text>
+        </view>
+      </view>
+      <view class="unlock-hint">完成 Level 2 后解锁</view>
+    </view>
+
     <view class="bottom-space"></view>
   </scroll-view>
 
-  <!-- ===== TAB 1: 每日课程 ===== -->
-  <scroll-view wx:if="{{activeTab === 1}}" class="content-scroll" scroll-y="true">
-
-    <!-- Progress Header -->
-    <view class="progress-header">
-      <view class="progress-info">
-        <text class="progress-title">学习进度</text>
-        <text class="progress-count">{{lessons.length}}节课程</text>
+  <!-- ===== Phonics Sheet (Bottom Sheet) ===== -->
+  <view class="modal-overlay" wx:if="{{showPhonics}}" bindtap="onClosePhonics">
+    <view class="bottom-sheet" catchtap="stopPropagation">
+      <view class="sheet-handle"></view>
+      <view class="sheet-header">
+        <text class="sheet-title">🔤 意大利语发音指南</text>
+        <view class="sheet-close" bindtap="onClosePhonics">✕</view>
       </view>
-      <view class="progress-bar">
-        <view class="progress-fill" style="width: {{Object.keys(lessonProgress).length / lessons.length * 100}}%"></view>
-      </view>
-      <text class="progress-text">已完成 {{Object.keys(lessonProgress).length}} / {{lessons.length}}</text>
-    </view>
+      <scroll-view class="sheet-scroll" scroll-y="true">
 
-    <!-- Lesson List -->
-    <view class="lessons-list">
-      <view
-        wx:for="{{lessons}}"
-        wx:key="id"
-        class="lesson-card {{lessonProgress[item.id] ? 'completed' : ''}} {{!isLessonUnlocked(index) ? 'locked' : ''}}"
-        bindtap="onLessonTap"
-        data-idx="{{index}}"
-      >
-        <view class="lesson-num-box {{lessonProgress[item.id] ? 'done' : ''}}">
-          <text wx:if="{{lessonProgress[item.id]}}">✓</text>
-          <text wx:elif="{{!isLessonUnlocked(index)}}">🔒</text>
-          <text wx:else>{{item.id}}</text>
-        </view>
-        <view class="lesson-info">
-          <view class="lesson-title-row">
-            <text class="lesson-emoji">{{item.emoji}}</text>
-            <text class="lesson-title-text">{{item.title}}</text>
-          </view>
-          <text class="lesson-desc">{{item.desc}}</text>
-          <view class="lesson-meta">
-            <text class="lesson-time">⏱ {{item.time}}</text>
-            <text class="lesson-words">📝 {{item.vocab.length}}个词汇</text>
+        <!-- Vowels -->
+        <view class="sheet-section-title">五个元音</view>
+        <view class="vowels-row">
+          <view wx:for="{{vowels}}" wx:key="letter" class="vowel-pill" bindtap="onVowelTap" data-letter="{{item.letter}}">
+            <text class="vowel-letter">{{item.letter}}</text>
+            <text class="vowel-phonetic">{{item.phonetic}}</text>
           </view>
         </view>
-        <view class="lesson-arrow">
-          <text wx:if="{{!isLessonUnlocked(index)}}">🔒</text>
-          <text wx:elif="{{lessonProgress[item.id]}}">✅</text>
-          <text wx:else>▶</text>
-        </view>
-      </view>
-    </view>
-    <view class="bottom-space"></view>
-  </scroll-view>
 
-  <!-- Lesson Modal -->
+        <!-- Rules -->
+        <view class="sheet-section-title">核心发音规则</view>
+        <view wx:for="{{consonantRules}}" wx:key="title" class="rule-card">
+          <view class="rule-header">
+            <text class="rule-icon">{{item.icon}}</text>
+            <text class="rule-title">{{item.title}}</text>
+          </view>
+          <view wx:for="{{item.rules}}" wx:for-item="rule" wx:key="pattern" class="rule-row">
+            <view class="rule-pattern-row">
+              <text class="pattern-text">{{rule.pattern}}</text>
+              <text class="pattern-arrow">→</text>
+              <text class="pattern-sound">{{rule.sound}}</text>
+            </view>
+            <text class="rule-example">例：{{rule.example}}</text>
+          </view>
+        </view>
+
+        <!-- Alphabet -->
+        <view class="sheet-section-title">完整字母表（21字母）</view>
+        <text class="alphabet-note">意大利字母表没有 J K W X Y（仅用于外来词）</text>
+        <view class="alphabet-grid">
+          <view wx:for="{{alphabet}}" wx:key="letter" class="alpha-item">
+            <text class="alpha-letter">{{item.letter}}</text>
+            <text class="alpha-name">{{item.name}}</text>
+            <text class="alpha-phonetic">{{item.phonetic}}</text>
+            <view class="alpha-tts-btn" catchtap="onLetterTTSTap" data-letter="{{item.letter}}">🔊</view>
+          </view>
+        </view>
+
+        <!-- Tips -->
+        <view class="sheet-section-title">发音贴士</view>
+        <view class="tips-card">
+          <view wx:for="{{phonicsTips}}" wx:key="*this" class="tip-row">
+            <text class="tip-dot">•</text>
+            <text class="tip-text">{{item}}</text>
+          </view>
+        </view>
+
+        <!-- Complete Phonics -->
+        <view class="complete-btn-wrap">
+          <view class="complete-btn {{phonicsCompleted ? 'already-done' : ''}}" bindtap="onCompletePhonics">
+            <text>{{phonicsCompleted ? '✅ 已掌握发音基础' : '🎓 完成发音入门'}}</text>
+          </view>
+        </view>
+        <view style="height: 60rpx;"></view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- ===== Lesson Modal ===== -->
   <view class="modal-overlay" wx:if="{{showLessonModal}}" bindtap="onCloseLessonModal">
-    <view class="lesson-modal" catchtap="stopPropagation">
-      <!-- Modal Header -->
-      <view class="modal-header">
-        <text class="modal-emoji">{{currentLesson.emoji}}</text>
-        <text class="modal-title">第{{currentLesson.id}}课：{{currentLesson.title}}</text>
-        <view class="modal-close" bindtap="onCloseLessonModal">✕</view>
+    <view class="bottom-sheet lesson-sheet" catchtap="stopPropagation">
+      <view class="sheet-handle"></view>
+      <view class="sheet-header">
+        <text class="sheet-title">{{currentLesson.emoji}} {{currentLesson.title}}</text>
+        <view class="sheet-close" bindtap="onCloseLessonModal">✕</view>
       </view>
 
-      <scroll-view class="modal-scroll" scroll-y="true">
+      <scroll-view class="sheet-scroll" scroll-y="true">
+
+        <!-- Lesson context hint -->
+        <view class="lesson-context-hint">
+          <text class="context-hint-text">📍 这节课的词汇在「速查」页也能找到</text>
+        </view>
+
         <!-- Vocabulary -->
-        <view class="modal-section-title">📖 词汇</view>
-        <view
-          wx:for="{{currentLesson.vocab}}"
-          wx:key="italian"
-          class="vocab-item"
-        >
+        <view class="sheet-section-title">📖 词汇（{{currentLesson.vocab.length}}个）</view>
+        <view wx:for="{{currentLesson.vocab}}" wx:key="italian" class="vocab-item">
           <view class="vocab-left">
             <text class="vocab-italian">{{item.italian}}</text>
             <view class="vocab-tts-btn" catchtap="onVocabTTSTap" data-italian="{{item.italian}}">🔊</view>
@@ -185,13 +287,13 @@
         </view>
 
         <!-- Grammar -->
-        <view class="modal-section-title">📐 语法说明</view>
+        <view class="sheet-section-title">📐 语法说明</view>
         <view class="grammar-box">
           <text class="grammar-text">{{currentLesson.grammar}}</text>
         </view>
 
         <!-- Exercise -->
-        <view class="modal-section-title">✏️ 小练习</view>
+        <view class="sheet-section-title">✏️ 小练习</view>
         <view class="exercise-box">
           <text class="exercise-question">{{currentLesson.exercise.question}}</text>
           <view
@@ -201,7 +303,7 @@
             class="exercise-option
               {{lessonAnswered && optIdx === currentLesson.exercise.answer ? 'correct' : ''}}
               {{lessonAnswered && selectedOption === optIdx && optIdx !== currentLesson.exercise.answer ? 'wrong' : ''}}
-              {{selectedOption === optIdx ? 'selected' : ''}}"
+              {{selectedOption === optIdx && !lessonAnswered ? 'selected' : ''}}"
             bindtap="{{lessonAnswered ? '' : 'onAnswerSelect'}}"
             data-idx="{{optIdx}}"
           >
@@ -224,6 +326,7 @@
             <text>{{lessonProgress[currentLesson.id] ? '✅ 已完成' : '🎓 完成本课'}}</text>
           </view>
         </view>
+        <view style="height: 60rpx;"></view>
       </scroll-view>
     </view>
   </view>
