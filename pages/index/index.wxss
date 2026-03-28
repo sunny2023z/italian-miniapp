@@ -88,7 +88,6 @@
 .cat-scroll {
   background: #FFFFFF;
   white-space: nowrap;
-  padding-bottom: 12rpx;
   flex-shrink: 0;
 }
 
@@ -132,18 +131,12 @@
   margin-top: 16rpx;
 }
 
-/* 卡片：点击播放 */
 .phrase-card {
   background: #FFFFFF;
   border-radius: 16rpx;
   padding: 20rpx 20rpx 16rpx;
   box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.06);
   border-left: 6rpx solid transparent;
-  active-opacity: 0.7;
-}
-
-.phrase-card.learned {
-  border-left-color: #6B7C3B;
 }
 
 .phrase-card.faved {
@@ -182,12 +175,7 @@
   display: block;
 }
 
-/* 右侧操作：收藏 + 已学 */
 .card-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16rpx;
   padding-left: 20rpx;
 }
 
@@ -220,37 +208,6 @@
   font-size: 22rpx;
   color: #8B7265;
   line-height: 1.5;
-}
-
-/* ── 底部统计 ── */
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  background: #FFFFFF;
-  padding: 20rpx;
-  border-top: 1rpx solid #F0E0D0;
-}
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-  font-size: 40rpx;
-  font-weight: 700;
-  color: #2C1810;
-}
-
-
-  font-size: 22rpx;
-  color: #8B7265;
-  margin-top: 2rpx;
-}
-
-  width: 1rpx;
-  height: 50rpx;
-  background: #E8D5C4;
 }
 
 /* ── 空状态 ── */
