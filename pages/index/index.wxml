@@ -17,13 +17,6 @@
       <view wx:if="{{translateLoading}}" class="search-spinner">···</view>
       <view wx:elif="{{searchText}}" class="search-clear" catchtap="onSearchClear">✕</view>
     </view>
-    <!-- 翻译结果 -->
-    <view wx:if="{{translateResult}}" class="translate-result-row" catchtap="onPlayTranslateResult">
-      <view class="translate-result-left">
-        <text class="translate-result-text">{{translateResult}}</text>
-      </view>
-      <view class="translate-tts-btn">🔊</view>
-    </view>
   </view>
 
   <!-- 分类 Tag：无搜索时显示 -->
@@ -40,6 +33,27 @@
 
   <!-- Phrase List -->
   <scroll-view class="phrase-list" scroll-y="true" enhanced="true" bounces="true">
+
+    <!-- 翻译结果卡片：样式同速查词条，置顶 -->
+    <view wx:if="{{translateResult}}" class="phrase-wrapper">
+      <view
+        class="phrase-card {{translateFaved ? 'faved' : ''}} translate-card"
+        bindtap="onPlayTranslateResult"
+      >
+        <view class="card-body">
+          <view class="card-main">
+            <text class="italian-text">{{translateItalian}}</text>
+            <text class="chinese-text">{{translateChinese}}</text>
+          </view>
+          <view class="card-actions">
+            <view
+              class="action-icon {{translateFaved ? 'fav-on' : 'fav-off'}}"
+              catchtap="onFavTranslate"
+            >{{translateFaved ? '⭐' : '☆'}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
 
     <view wx:for="{{filteredPhrases}}" wx:key="id" class="phrase-wrapper">
       <view

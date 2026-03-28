@@ -9,15 +9,27 @@
 
   <scroll-view wx:else class="phrase-list" scroll-y="true" enhanced="true" bounces="true">
     <view wx:for="{{phrases}}" wx:key="id" class="phrase-wrapper">
-      <view class="phrase-card {{item.isFav ? 'faved' : ''}}" bindtap="onCardTap" data-id="{{item.id}}">
+      <view
+        class="phrase-card faved"
+        bindtap="onCardTap"
+        data-id="{{item.id}}"
+        data-italian="{{item.italian}}"
+        data-custom="{{item.custom}}"
+      >
         <view class="card-body">
           <view class="card-main">
             <text class="italian-text">{{item.italian}}</text>
-            <text class="pronunciation-text">{{item.pronunciation}}</text>
+            <text wx:if="{{item.pronunciation}}" class="pronunciation-text">{{item.pronunciation}}</text>
             <text class="chinese-text">{{item.chinese}}</text>
           </view>
           <view class="card-actions">
-            <view class="action-icon fav-on" catchtap="onToggleFav" data-id="{{item.id}}">⭐</view>
+            <view
+              class="action-icon fav-on"
+              catchtap="onToggleFav"
+              data-id="{{item.id}}"
+              data-italian="{{item.italian}}"
+              data-custom="{{item.custom}}"
+            >⭐</view>
           </view>
         </view>
         <view wx:if="{{item.tip}}" class="card-tip">

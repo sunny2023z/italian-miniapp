@@ -197,6 +197,11 @@
   color: #F0A020;
 }
 
+/* 翻译结果卡片：顶部橙色边 */
+.translate-card {
+  border-top: 3rpx solid #C1440E;
+}
+
 /* Tip */
 .card-tip {
   margin-top: 10rpx;

@@ -12,7 +12,11 @@ Page({
     selectedCat: -1,
     searchText: '',
     favorites: {},
-    translateResult: '',
+    // 翻译结果（拆成意大利语/中文两个字段，对齐卡片结构）
+    translateResult: '',    // 原始结果（用于播放判断）
+    translateItalian: '',   // 显示在卡片意大利语位置
+    translateChinese: '',   // 显示在卡片中文位置
+    translateFaved: false,
     translateLoading: false,
   },
 
@@ -55,49 +59,80 @@ Page({
 
   onSearchInput(e) {
     const val = e.detail.value;
-    this.setData({ searchText: val, translateResult: '' }, () => this._applyFilter());
+    // 输入变化时清空翻译结果，实时过滤词条
+    this.setData({ searchText: val, translateResult: '', translateItalian: '', translateChinese: '', translateFaved: false }, () => this._applyFilter());
+    // 防抖自动翻译
     if (this._timer) clearTimeout(this._timer);
-    if (!val.trim()) {
-      this.setData({ translateLoading: false });
-      return;
-    }
+    if (!val.trim()) { this.setData({ translateLoading: false }); return; }
     this.setData({ translateLoading: true });
     this._timer = setTimeout(() => this._doTranslate(val.trim()), TRANSLATE_DEBOUNCE);
   },
 
+  onSearchConfirm(e) {
+    const val = e.detail.value;
+    if (!val.trim()) return;
+    if (this._timer) clearTimeout(this._timer);
+    this._doTranslate(val.trim());
+  },
+
   onSearchClear() {
     if (this._timer) clearTimeout(this._timer);
-    this.setData({ searchText: '', translateResult: '', translateLoading: false }, () => this._applyFilter());
+    this.setData({
+      searchText: '', translateResult: '', translateItalian: '', translateChinese: '',
+      translateFaved: false, translateLoading: false,
+    }, () => this._applyFilter());
   },
 
   _doTranslate(text) {
+    this.setData({ translateLoading: true });
     const isChinese = /[\u4e00-\u9fa5]/.test(text);
     const from = isChinese ? 'zh-CN' : 'it';
     const to = isChinese ? 'it' : 'zh-CN';
-    console.log('[translate] 请求:', text, from, '->', to);
     wx.request({
       url: `${SERVER}/translate`,
       data: { text, from, to },
       timeout: 10000,
       success: (res) => {
-        console.log('[translate] 响应:', res.statusCode, res.data);
         if (res.statusCode === 200 && res.data.result) {
-          this.setData({ translateResult: res.data.result });
+          const result = res.data.result;
+          // 根据方向决定卡片上下显示
+          this.setData({
+            translateResult: result,
+            translateItalian: isChinese ? result : text,
+            translateChinese: isChinese ? text : result,
+            translateFaved: false,
+          });
         }
       },
       fail: (err) => {
         console.error('[translate] 失败:', err);
-        wx.showToast({ title: '翻译失败: ' + (err.errMsg || ''), icon: 'none', duration: 3000 });
       },
       complete: () => this.setData({ translateLoading: false }),
     });
   },
 
+  // 点翻译卡片 = 播放意大利语
   onPlayTranslateResult() {
-    const { translateResult, searchText } = this.data;
-    if (!translateResult) return;
-    const isChinese = /[\u4e00-\u9fa5]/.test(searchText);
-    playText(isChinese ? translateResult : searchText);
+    const { translateItalian } = this.data;
+    if (translateItalian) playText(translateItalian);
+  },
+
+  // 收藏翻译结果（存为自定义词条，key 用 `custom_` 前缀）
+  onFavTranslate() {
+    const { translateItalian, translateChinese, translateFaved } = this.data;
+    if (!translateItalian) return;
+    const key = `custom_${translateItalian}`;
+    const customFavs = wx.getStorageSync('italian_custom_favs') || {};
+    if (translateFaved) {
+      delete customFavs[key];
+      this.setData({ translateFaved: false });
+      wx.showToast({ title: '已取消收藏', icon: 'none', duration: 1200 });
+    } else {
+      customFavs[key] = { italian: translateItalian, chinese: translateChinese, custom: true };
+      this.setData({ translateFaved: true });
+      wx.showToast({ title: '已收藏 ⭐', icon: 'none', duration: 1200 });
+    }
+    wx.setStorageSync('italian_custom_favs', customFavs);
   },
 
   onCatTap(e) {
