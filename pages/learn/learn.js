@@ -469,9 +469,9 @@ Page({
 
     // State
     showIntro: false,
-    showLevel1: true,
-    showLevel2: true,
-    showLevel3: true,
+    showLevel1: false,
+    showLevel2: false,
+    showLevel3: false,
     lessonProgress: {},
     phonicsCompleted: false,
     showPhonics: false,
@@ -504,8 +504,20 @@ Page({
     (stored.completed || []).forEach(id => { lessonProgress[id] = true; });
     const phonicsCompleted = !!stored.phonics;
 
+    // 恢复折叠状态（用户上次调整的状态）
+    const collapseState = wx.getStorageSync('italian_learn_collapse') || {};
+    const showIntro   = collapseState.intro   !== undefined ? collapseState.intro   : false;
+    const showLevel1  = collapseState.level1  !== undefined ? collapseState.level1  : false;
+    const showLevel2  = collapseState.level2  !== undefined ? collapseState.level2  : false;
+    const showLevel3  = collapseState.level3  !== undefined ? collapseState.level3  : false;
+
     const stats = computeStats(lessonProgress, phonicsCompleted);
-    this.setData({ lessonProgress, phonicsCompleted, ...stats });
+    this.setData({ lessonProgress, phonicsCompleted, showIntro, showLevel1, showLevel2, showLevel3, ...stats });
+  },
+
+  _saveCollapseState() {
+    const { showIntro, showLevel1, showLevel2, showLevel3 } = this.data;
+    wx.setStorageSync('italian_learn_collapse', { intro: showIntro, level1: showLevel1, level2: showLevel2, level3: showLevel3 });
   },
 
   _saveProgress() {
@@ -515,19 +527,19 @@ Page({
   },
 
   onToggleIntro() {
-    this.setData({ showIntro: !this.data.showIntro });
+    this.setData({ showIntro: !this.data.showIntro }, () => this._saveCollapseState());
   },
 
   onToggleLevel1() {
-    this.setData({ showLevel1: !this.data.showLevel1 });
+    this.setData({ showLevel1: !this.data.showLevel1 }, () => this._saveCollapseState());
   },
 
   onToggleLevel2() {
-    this.setData({ showLevel2: !this.data.showLevel2 });
+    this.setData({ showLevel2: !this.data.showLevel2 }, () => this._saveCollapseState());
   },
 
   onToggleLevel3() {
-    this.setData({ showLevel3: !this.data.showLevel3 });
+    this.setData({ showLevel3: !this.data.showLevel3 }, () => this._saveCollapseState());
   },
 
   // ── Phonics ──────────────────────────────────────────────────────────────────
@@ -612,8 +624,13 @@ Page({
   },
 
   onVocabTTSTap(e) {
-    const text = e.currentTarget.dataset.italian;
-    if (text) playText(text);
+    const idx = parseInt(e.currentTarget.dataset.idx);
+    const vocab = this.data.currentLesson && this.data.currentLesson.vocab;
+    if (vocab && vocab[idx]) {
+      // 取第一个词（有些写成 "bello/bella" 取斜杠前部分）
+      const text = vocab[idx].italian.split('/')[0].trim();
+      if (text) playText(text);
+    }
   },
 
   stopPropagation() {},

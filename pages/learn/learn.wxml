@@ -404,7 +404,7 @@
         <view wx:for="{{currentLesson.vocab}}" wx:key="italian"
           class="vocab-item"
           bindtap="onVocabTTSTap"
-          data-italian="{{item.italian}}">
+          data-idx="{{index}}">
           <view class="vocab-left">
             <text class="vocab-italian">{{item.italian}}</text>
             <text class="vocab-tts-hint">🔊</text>
