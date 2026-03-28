@@ -51,6 +51,11 @@ Page({
       );
     }
     this.setData({ filteredPhrases: list });
+
+    // 后台预热：把当前列表前10条音频悄悄缓存，用户点时秒播
+    list.slice(0, 10).forEach((p, i) => {
+      setTimeout(() => prefetchTTS(p.italian), i * 150);
+    });
   },
 
   onSearchInput(e) {
