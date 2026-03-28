@@ -39,11 +39,6 @@
   <!-- Phrase List -->
   <scroll-view class="phrase-list" scroll-y="true" enhanced="true" bounces="true">
 
-    <view wx:if="{{filteredPhrases.length === 0 && !searchText}}" class="empty-state">
-      <text class="emoji">🇮🇹</text>
-      <text class="text">输入词汇开始搜索或翻译</text>
-    </view>
-
     <view wx:if="{{filteredPhrases.length === 0 && searchText && !translateLoading}}" class="empty-state">
       <text class="emoji">🔍</text>
       <text class="text">没有匹配的速查词条</text>
