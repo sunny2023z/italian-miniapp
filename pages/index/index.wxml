@@ -1,41 +1,29 @@
 <!-- pages/index/index.wxml -->
 <view class="page-container">
 
-  <!-- 翻译框 -->
-  <view class="translate-card">
-    <view class="translate-input-row">
-      <input
-        class="translate-input"
-        placeholder="输入中文，翻译成意大利语..."
-        placeholder-class="translate-placeholder"
-        value="{{translateInput}}"
-        bindinput="onTranslateInput"
-        confirm-type="search"
-        bindconfirm="onTranslate"
-      />
-      <view wx:if="{{translateInput}}" class="translate-clear" catchtap="onTranslateClear">✕</view>
-      <view class="translate-btn {{translateLoading ? 'loading' : ''}}" catchtap="onTranslate">
-        <text>{{translateLoading ? '…' : '翻译'}}</text>
-      </view>
-    </view>
-    <view wx:if="{{translateResult}}" class="translate-result-row">
-      <text class="translate-result-text">{{translateResult}}</text>
-      <view class="translate-tts-btn" catchtap="onPlayTranslateResult">🔊</view>
-    </view>
-  </view>
-
-  <!-- Search Bar -->
+  <!-- 智能搜索框（搜索 + 翻译二合一） -->
   <view class="search-bar">
     <view class="search-inner">
       <text class="search-icon">🔍</text>
       <input
         class="search-input"
-        placeholder="搜索意大利语或中文..."
+        placeholder="搜索短语 或 输入中文翻译..."
         placeholder-class="search-placeholder"
         value="{{searchText}}"
         bindinput="onSearchInput"
+        confirm-type="search"
+        bindconfirm="onSmartConfirm"
       />
-      <view wx:if="{{searchText}}" class="search-clear" bindtap="onSearchClear">✕</view>
+      <view wx:if="{{searchText}}" class="search-clear" catchtap="onSearchClear">✕</view>
+      <view wx:if="{{translateLoading}}" class="search-loading">…</view>
+    </view>
+    <!-- 翻译结果 -->
+    <view wx:if="{{translateResult}}" class="translate-result-row">
+      <view class="translate-result-left">
+        <text class="translate-label">🇮🇹 翻译结果</text>
+        <text class="translate-result-text">{{translateResult}}</text>
+      </view>
+      <view class="translate-tts-btn" catchtap="onPlayTranslateResult">🔊</view>
     </view>
   </view>
 
@@ -51,16 +39,14 @@
     </view>
   </scroll-view>
 
-  <!-- Phrase List：用scroll-view保证整体可滑动，卡片内部不再catch事件 -->
+  <!-- Phrase List -->
   <scroll-view class="phrase-list" scroll-y="true" enhanced="true" bounces="true">
-    <view wx:if="{{filteredPhrases.length === 0}}" class="empty-state">
+    <view wx:if="{{filteredPhrases.length === 0 && !translateResult}}" class="empty-state">
       <text class="emoji">🔍</text>
       <text class="text">没有找到相关短语</text>
     </view>
 
     <view wx:for="{{filteredPhrases}}" wx:key="id" class="phrase-wrapper">
-
-      <!-- Card：只绑定tap，不干预touchmove，让scroll-view自由滚动 -->
       <view
         class="phrase-card {{item.isLearned ? 'learned' : ''}} {{item.isFav ? 'faved' : ''}} {{expandedId === item.id ? 'expanded' : ''}}"
         bindtap="onCardTap"
@@ -73,8 +59,7 @@
             <text class="pronunciation-text">{{item.pronunciation}}</text>
           </view>
           <view class="card-right">
-            <!-- TTS按钮用catchtap防止触发卡片展开 -->
-            <view class="tts-btn" catchtap="onTTSTap" data-id="{{item.id}}" data-pronunciation="{{item.pronunciation}}">🔊</view>
+            <view class="tts-btn" catchtap="onTTSTap" data-id="{{item.id}}">🔊</view>
             <view class="status-icons">
               <text wx:if="{{item.isFav}}">⭐</text>
               <text wx:if="{{item.isLearned}}" class="learned-icon">✓</text>
@@ -102,10 +87,8 @@
           </view>
         </view>
       </view>
-
     </view>
 
-    <!-- 底部留白，不被stats-bar遮住 -->
     <view style="height: 100rpx;"></view>
   </scroll-view>
 

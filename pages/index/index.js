@@ -15,8 +15,6 @@ Page({
     favorites: {},
     learnedCount: 0,
     favCount: 0,
-    // 翻译框
-    translateInput: '',
     translateResult: '',
     translateLoading: false,
   },
@@ -66,21 +64,37 @@ Page({
     this.setData({ filteredPhrases: list });
   },
 
-  // ── 翻译框 ────────────────────────────────────────────
-  onTranslateInput(e) {
-    this.setData({ translateInput: e.detail.value, translateResult: '' });
+  // ── 智能搜索框 ───────────────────────────────────────
+  // 判断是否包含中文
+  _isChinese(text) {
+    return /[\u4e00-\u9fa5]/.test(text);
   },
 
-  onTranslateClear() {
-    this.setData({ translateInput: '', translateResult: '' });
+  onSearchInput(e) {
+    const val = e.detail.value;
+    // 有中文时清掉上次翻译结果，等用户确认再翻译
+    if (this._isChinese(val)) {
+      this.setData({ searchText: val, translateResult: '', filteredPhrases: [] });
+    } else {
+      this.setData({ searchText: val, translateResult: '' }, () => this._applyFilter());
+    }
   },
 
-  onTranslate() {
-    const text = this.data.translateInput.trim();
+  // 键盘回车/确认键：中文就翻译
+  onSmartConfirm() {
+    const text = this.data.searchText.trim();
     if (!text) return;
+    if (this._isChinese(text)) {
+      this._doTranslate(text);
+    }
+  },
 
+  onSearchClear() {
+    this.setData({ searchText: '', translateResult: '' }, () => this._applyFilter());
+  },
+
+  _doTranslate(text) {
     this.setData({ translateLoading: true, translateResult: '' });
-
     wx.request({
       url: `${SERVER}/translate`,
       data: { text, from: 'zh-CN', to: 'it' },
@@ -91,12 +105,8 @@ Page({
           wx.showToast({ title: '翻译失败，请重试', icon: 'none' });
         }
       },
-      fail: () => {
-        wx.showToast({ title: '网络错误', icon: 'none' });
-      },
-      complete: () => {
-        this.setData({ translateLoading: false });
-      }
+      fail: () => wx.showToast({ title: '网络错误', icon: 'none' }),
+      complete: () => this.setData({ translateLoading: false }),
     });
   },
 
@@ -105,8 +115,7 @@ Page({
     if (text) playText(text);
   },
 
-  // ── 速查列表 ──────────────────────────────────────────
-  onCatTap(e) {
+
     const id = parseInt(e.currentTarget.dataset.id);
     const selectedCat = this.data.selectedCat === id ? -1 : id;
     this.setData({ selectedCat }, () => this._applyFilter());
