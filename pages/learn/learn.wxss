@@ -438,6 +438,7 @@
 
 .fill-1 { background: linear-gradient(90deg, #C1440E, #E8622A); }
 .fill-2 { background: linear-gradient(90deg, #4A7A1E, #72B030); }
+.fill-3 { background: linear-gradient(90deg, #7B2FA6, #A855D8); }
 
 /* Locked hint */
 .unlock-hint {
@@ -985,11 +986,10 @@
   color: #C1440E;
 }
 
-.vocab-tts-btn {
-  font-size: 26rpx;
-  padding: 4rpx 8rpx;
-  border-radius: 8rpx;
-  background: rgba(193, 68, 14, 0.08);
+.vocab-tts-hint {
+  font-size: 20rpx;
+  opacity: 0.5;
+  margin-left: 8rpx;
 }
 
 .vocab-right {

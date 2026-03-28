@@ -298,10 +298,121 @@ const LEVEL2_LESSONS = [
   },
 ];
 
+const LEVEL3_LESSONS = [
+  {
+    id: 201, title: '动词变位基础', time: '15分钟', emoji: '🔀',
+    desc: '掌握最常用的动词变位规律',
+    vocab: [
+      { italian: 'essere',   chinese: '是（be动词）', pronunciation: '艾赛雷' },
+      { italian: 'avere',    chinese: '有',           pronunciation: '阿维雷' },
+      { italian: 'fare',     chinese: '做',           pronunciation: '法雷' },
+      { italian: 'andare',   chinese: '去',           pronunciation: '安达雷' },
+      { italian: 'venire',   chinese: '来',           pronunciation: '维尼雷' },
+      { italian: 'potere',   chinese: '能/可以',      pronunciation: '破特雷' },
+    ],
+    grammar: '意大利语动词原形以 -are/-ere/-ire 结尾。以 parlare（说话）为例：io parlo / tu parli / lui parla / noi parliamo。规律动词变位套用模板即可，不规则动词（如 essere/avere）要单独记。',
+    exercise: {
+      question: '"我去"的意大利语是：',
+      options: ['io sono', 'io vado', 'io faccio', 'io vengo'],
+      answer: 1
+    }
+  },
+  {
+    id: 202, title: '名词阴阳性', time: '12分钟', emoji: '⚧',
+    desc: '搞懂名词性别，冠词不再乱',
+    vocab: [
+      { italian: 'il libro',    chinese: '书（阳性）',   pronunciation: '伊尔 利布罗' },
+      { italian: 'la porta',    chinese: '门（阴性）',   pronunciation: '拉 破塔' },
+      { italian: 'il ragazzo',  chinese: '男孩（阳性）', pronunciation: '伊尔 拉加佐' },
+      { italian: 'la ragazza',  chinese: '女孩（阴性）', pronunciation: '拉 拉加扎' },
+      { italian: 'i libri',     chinese: '书们（复数）', pronunciation: '伊 利布利' },
+      { italian: 'le porte',    chinese: '门们（复数）', pronunciation: '莱 破特' },
+    ],
+    grammar: '规律：-o结尾通常是阳性（il libro），-a结尾通常是阴性（la porta）。复数：阳性 -o→-i，阴性 -a→-e。冠词要跟名词性别和数匹配。',
+    exercise: {
+      question: '"书"的复数是：',
+      options: ['il libro', 'la libra', 'i libri', 'le libre'],
+      answer: 2
+    }
+  },
+  {
+    id: 203, title: '常用介词', time: '12分钟', emoji: '🔗',
+    desc: '介词是句子的连接器',
+    vocab: [
+      { italian: 'di',   chinese: '的/关于',   pronunciation: '迪' },
+      { italian: 'a',    chinese: '到/在/给',  pronunciation: '阿' },
+      { italian: 'da',   chinese: '从/由',     pronunciation: '达' },
+      { italian: 'in',   chinese: '在...里',   pronunciation: '因' },
+      { italian: 'con',  chinese: '和/与',     pronunciation: '孔' },
+      { italian: 'per',  chinese: '为了/经过', pronunciation: '佩尔' },
+    ],
+    grammar: '介词和冠词会合并缩写：di+il=del，a+il=al，da+il=dal，in+il=nel。例如：Vado al supermercato（我去超市），Una tazza di caffè（一杯咖啡）。',
+    exercise: {
+      question: '"我去超市"的意大利语是：',
+      options: ['Vado in supermercato', 'Vado al supermercato', 'Vado del supermercato', 'Vado con supermercato'],
+      answer: 1
+    }
+  },
+  {
+    id: 204, title: '情态动词', time: '12分钟', emoji: '💬',
+    desc: '表达能力、意愿、义务',
+    vocab: [
+      { italian: 'potere',  chinese: '能/可以',   pronunciation: '破特雷' },
+      { italian: 'volere',  chinese: '想要',      pronunciation: '沃莱雷' },
+      { italian: 'dovere',  chinese: '必须/应该', pronunciation: '多维雷' },
+      { italian: 'sapere',  chinese: '知道/会',   pronunciation: '萨佩雷' },
+      { italian: 'Posso?',  chinese: '我可以...吗？', pronunciation: '破索' },
+      { italian: 'Devo',    chinese: '我必须...',  pronunciation: '德沃' },
+    ],
+    grammar: '情态动词后面跟动词原形。例如：Posso entrare?（我可以进来吗？），Devo andare（我必须走了），Voglio dormire（我想睡觉）。这三个动词是开口说话的超级工具。',
+    exercise: {
+      question: '"我想睡觉"用意大利语：',
+      options: ['Devo dormire', 'Posso dormire', 'Voglio dormire', 'Sapere dormire'],
+      answer: 2
+    }
+  },
+  {
+    id: 205, title: '形容词用法', time: '10分钟', emoji: '🎨',
+    desc: '描述人和物，让表达更丰富',
+    vocab: [
+      { italian: 'bello/bella',   chinese: '美丽的',   pronunciation: '贝洛/贝拉' },
+      { italian: 'grande',        chinese: '大的',     pronunciation: '格兰德' },
+      { italian: 'piccolo/piccola', chinese: '小的',   pronunciation: '皮科洛/皮科拉' },
+      { italian: 'buono/buona',   chinese: '好的',     pronunciation: '波诺/波娜' },
+      { italian: 'nuovo/nuova',   chinese: '新的',     pronunciation: '诺沃/诺瓦' },
+      { italian: 'vecchio/vecchia', chinese: '旧/老的', pronunciation: '维奇欧/维奇阿' },
+    ],
+    grammar: '形容词要和名词的性别数一致：un ragazzo bello / una ragazza bella / dei ragazzi belli。形容词通常放在名词后面，但 bello/grande/buono 可以放在前面，且意思会有微妙变化。',
+    exercise: {
+      question: '"一个漂亮的女孩"是：',
+      options: ['un ragazzo bello', 'una ragazza bella', 'una ragazza bello', 'un ragazza bella'],
+      answer: 1
+    }
+  },
+  {
+    id: 206, title: '过去时入门', time: '15分钟', emoji: '⏮️',
+    desc: '会说"我做了..."，能讲故事',
+    vocab: [
+      { italian: 'ho mangiato',  chinese: '我吃了',   pronunciation: '奥 曼基阿托' },
+      { italian: 'ho bevuto',    chinese: '我喝了',   pronunciation: '奥 贝布托' },
+      { italian: 'sono andato',  chinese: '我去了',   pronunciation: '索诺 安达托' },
+      { italian: 'ho visto',     chinese: '我看到了', pronunciation: '奥 维斯托' },
+      { italian: 'ho fatto',     chinese: '我做了',   pronunciation: '奥 法托' },
+      { italian: 'ieri',         chinese: '昨天',     pronunciation: '耶里' },
+    ],
+    grammar: '意大利语常用过去时（passato prossimo）= avere/essere + 过去分词。大多数动词用 avere：ho mangiato（我吃了）。移动类动词用 essere：sono andato（我去了，男性），sono andata（女性）。',
+    exercise: {
+      question: '"我昨天去了罗马"：',
+      options: ['Ho andato a Roma ieri', 'Sono andato a Roma ieri', 'Vado a Roma ieri', 'Sono ando a Roma ieri'],
+      answer: 1
+    }
+  },
+];
+
 // ─── Computed helpers ─────────────────────────────────────────────────────────
 
 function computeStats(lessonProgress, phonicsCompleted) {
-  const allLessons = [...LEVEL1_LESSONS, ...LEVEL2_LESSONS];
+  const allLessons = [...LEVEL1_LESSONS, ...LEVEL2_LESSONS, ...LEVEL3_LESSONS];
   let totalCompleted = 0;
   let totalVocab = 0;
 
@@ -314,25 +425,25 @@ function computeStats(lessonProgress, phonicsCompleted) {
 
   const level1Completed = LEVEL1_LESSONS.filter(l => lessonProgress[l.id]).length;
   const level2Completed = LEVEL2_LESSONS.filter(l => lessonProgress[l.id]).length;
-  const allL1Done = level1Completed === LEVEL1_LESSONS.length;
+  const level3Completed = LEVEL3_LESSONS.filter(l => lessonProgress[l.id]).length;
 
   let currentLevelLabel = '入门';
   if (phonicsCompleted && level1Completed === 0) currentLevelLabel = 'L1';
   if (level1Completed > 0 && level1Completed < LEVEL1_LESSONS.length) currentLevelLabel = 'L1';
-  if (allL1Done && level2Completed === 0) currentLevelLabel = 'L2';
+  if (level1Completed === LEVEL1_LESSONS.length && level2Completed === 0) currentLevelLabel = 'L2';
   if (level2Completed > 0) currentLevelLabel = 'L2';
   if (level2Completed === LEVEL2_LESSONS.length) currentLevelLabel = 'L3';
 
-  // Pre-compute which lesson IDs are unlocked (now: ALL unlocked, no forced order)
+  // All lessons unlocked — no forced order
   const unlockedIds = {};
-  LEVEL1_LESSONS.forEach(l => { unlockedIds[l.id] = true; });
-  LEVEL2_LESSONS.forEach(l => { unlockedIds[l.id] = true; });
+  allLessons.forEach(l => { unlockedIds[l.id] = true; });
 
   return {
     totalCompleted,
     totalVocab,
     level1Completed,
     level2Completed,
+    level3Completed,
     currentLevelLabel,
     unlockedIds,
   };
@@ -351,13 +462,16 @@ Page({
     // Lesson data
     level1Lessons: LEVEL1_LESSONS,
     level2Lessons: LEVEL2_LESSONS,
+    level3Lessons: LEVEL3_LESSONS,
     level1Total: LEVEL1_LESSONS.length,
     level2Total: LEVEL2_LESSONS.length,
+    level3Total: LEVEL3_LESSONS.length,
 
     // State
-    showIntro: false,   // 导览默认折叠
+    showIntro: false,
     showLevel1: true,
     showLevel2: true,
+    showLevel3: true,
     lessonProgress: {},
     phonicsCompleted: false,
     showPhonics: false,
@@ -371,6 +485,7 @@ Page({
     totalVocab: 0,
     level1Completed: 0,
     level2Completed: 0,
+    level3Completed: 0,
     currentLevelLabel: '入门',
     unlockedIds: {},
   },
@@ -409,6 +524,10 @@ Page({
 
   onToggleLevel2() {
     this.setData({ showLevel2: !this.data.showLevel2 });
+  },
+
+  onToggleLevel3() {
+    this.setData({ showLevel3: !this.data.showLevel3 });
   },
 
   // ── Phonics ──────────────────────────────────────────────────────────────────
@@ -457,7 +576,7 @@ Page({
       return;
     }
 
-    const allLessons = [...LEVEL1_LESSONS, ...LEVEL2_LESSONS];
+    const allLessons = [...LEVEL1_LESSONS, ...LEVEL2_LESSONS, ...LEVEL3_LESSONS];
     const lesson = allLessons.find(l => l.id === lessonId);
     if (!lesson) return;
 

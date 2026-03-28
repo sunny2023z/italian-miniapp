@@ -275,34 +275,40 @@
 
     <!-- ===== Level 3: 语言深水区 ===== -->
     <view class="level-connector"></view>
-    <view class="level-block level-locked level-teaser">
-      <view class="level-header">
+    <view class="level-block">
+      <view class="level-header" bindtap="onToggleLevel3">
         <view class="level-badge badge-3">Level 3</view>
         <view class="level-header-text">
           <text class="level-title">语言深水区</text>
           <text class="level-desc">掌握语法骨架，具备自学能力</text>
         </view>
-        <text class="level-lock-icon">🔒</text>
+        <text class="level-progress-text">{{level3Completed}}/{{level3Total}}</text>
+        <text class="level-chevron">{{showLevel3 ? '▲' : '▼'}}</text>
       </view>
-      <view class="teaser-grid">
-        <view class="teaser-item">
-          <text class="teaser-emoji">🔀</text>
-          <text class="teaser-name">动词变位</text>
+
+      <view wx:if="{{showLevel3}}">
+        <view class="level-progress-bar" style="margin-top: 16rpx; margin-bottom: 24rpx;">
+          <view class="level-progress-fill fill-3" style="width: {{level3Completed / level3Total * 100}}%"></view>
         </view>
-        <view class="teaser-item">
-          <text class="teaser-emoji">⚤</text>
-          <text class="teaser-name">名词阴阳性</text>
-        </view>
-        <view class="teaser-item">
-          <text class="teaser-emoji">🔗</text>
-          <text class="teaser-name">常用介词</text>
-        </view>
-        <view class="teaser-item">
-          <text class="teaser-emoji">💬</text>
-          <text class="teaser-name">情态动词</text>
+
+        <view class="path-container">
+          <view wx:for="{{level3Lessons}}" wx:key="id" class="path-node-wrap">
+            <view wx:if="{{index > 0}}" class="node-connector {{lessonProgress[level3Lessons[index-1].id] ? 'connector-done' : ''}}"></view>
+            <view
+              class="path-node {{lessonProgress[item.id] ? 'node-done' : 'node-available'}}"
+              bindtap="onLessonTap"
+              data-id="{{item.id}}"
+            >
+              <view class="node-circle">
+                <text wx:if="{{lessonProgress[item.id]}}" class="node-icon done-icon">✓</text>
+                <text wx:else class="node-icon">{{item.emoji}}</text>
+              </view>
+              <text class="node-label">{{item.title}}</text>
+              <text class="node-meta">{{item.vocab.length}}词 · {{item.time}}</text>
+            </view>
+          </view>
         </view>
       </view>
-      <view class="unlock-hint">完成 Level 2 后解锁</view>
     </view>
 
     <view class="bottom-space"></view>
@@ -395,10 +401,13 @@
 
         <!-- Vocabulary -->
         <view class="sheet-section-title">📖 词汇（{{currentLesson.vocab.length}}个）</view>
-        <view wx:for="{{currentLesson.vocab}}" wx:key="italian" class="vocab-item">
+        <view wx:for="{{currentLesson.vocab}}" wx:key="italian"
+          class="vocab-item"
+          bindtap="onVocabTTSTap"
+          data-italian="{{item.italian}}">
           <view class="vocab-left">
             <text class="vocab-italian">{{item.italian}}</text>
-            <view class="vocab-tts-btn" catchtap="onVocabTTSTap" data-italian="{{item.italian}}">🔊</view>
+            <text class="vocab-tts-hint">🔊</text>
           </view>
           <view class="vocab-right">
             <text class="vocab-chinese">{{item.chinese}}</text>
