@@ -15,7 +15,7 @@
   "preloadRule": {
     "pages/onboarding/onboarding": {
       "network": "all",
-      "packages": ["audio"]
+      "packages": ["audio-pkg"]
     }
   },
   "window": {
