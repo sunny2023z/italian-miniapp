@@ -1,6 +1,11 @@
 // utils/audio.js - 意大利语音频播放工具
 
+const SERVER = 'https://italian-translate.jellyzen.fun';
+
 let _audioCtx = null;
+
+// 本地 TTS 缓存：text → 本地临时文件路径
+const _ttsCache = {};
 
 function _play(src, onError) {
   if (_audioCtx) {
@@ -17,7 +22,6 @@ function _play(src, onError) {
 
 /**
  * 播放指定 id 的本地预录音频（对应 phrases.js 词条）
- * @param {number} id
  */
 function playItalian(id) {
   _play(`/audio/${id}.mp3`, (e) => {
@@ -26,16 +30,38 @@ function playItalian(id) {
 }
 
 /**
- * 通过 Google TTS 在线播放任意意大利语文本
- * 用于 learn 页等没有预录音频的场景
- * 注意：需要在小程序后台合法域名添加 https://translate.google.com
- * @param {string} text - 意大利语文本
+ * 播放任意意大利语文本（优先本地缓存，否则实时请求）
+ * @param {string} text
  */
 function playText(text) {
-  const encoded = encodeURIComponent(text);
-  const url = `https://italian-translate.jellyzen.fun/tts?text=${encoded}&lang=it`;
+  if (!text) return;
+  // 命中本地缓存，直接播放
+  if (_ttsCache[text]) {
+    _play(_ttsCache[text]);
+    return;
+  }
+  // 未缓存，实时请求
+  const url = `${SERVER}/tts?text=${encodeURIComponent(text)}&lang=it`;
   _play(url, (e) => {
     console.warn(`在线 TTS 失败 [${text}]:`, e);
+  });
+}
+
+/**
+ * 预加载 TTS 音频到本地缓存（翻译完成后调用，用户点击前就下载好）
+ * @param {string} text - 意大利语文本
+ */
+function prefetchTTS(text) {
+  if (!text || _ttsCache[text]) return; // 已缓存则跳过
+  const url = `${SERVER}/tts?text=${encodeURIComponent(text)}&lang=it`;
+  wx.downloadFile({
+    url,
+    success: (res) => {
+      if (res.statusCode === 200) {
+        _ttsCache[text] = res.tempFilePath;
+      }
+    },
+    fail: () => {}, // 静默失败，不影响正常播放
   });
 }
 
@@ -50,4 +76,4 @@ function stopAudio() {
   }
 }
 
-module.exports = { playItalian, playText, stopAudio };
+module.exports = { playItalian, playText, prefetchTTS, stopAudio };

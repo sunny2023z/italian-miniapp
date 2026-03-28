@@ -1,9 +1,9 @@
 // pages/index/index.js
 const { ALL_PHRASES, CATEGORIES } = require('../../data/phrases');
-const { playItalian, playText } = require('../../utils/audio');
+const { playItalian, playText, prefetchTTS } = require('../../utils/audio');
 
 const SERVER = 'https://italian-translate.jellyzen.fun';
-const TRANSLATE_DEBOUNCE = 800;
+const TRANSLATE_DEBOUNCE = 400;
 
 Page({
   data: {
@@ -95,13 +95,15 @@ Page({
       success: (res) => {
         if (res.statusCode === 200 && res.data.result) {
           const result = res.data.result;
-          // 根据方向决定卡片上下显示
+          const italian = isChinese ? result : text;
           this.setData({
             translateResult: result,
-            translateItalian: isChinese ? result : text,
+            translateItalian: italian,
             translateChinese: isChinese ? text : result,
             translateFaved: false,
           });
+          // 翻译完立刻预下载 TTS，用户点击时直接播本地文件
+          prefetchTTS(italian);
         }
       },
       fail: (err) => {
