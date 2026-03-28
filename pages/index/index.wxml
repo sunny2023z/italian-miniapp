@@ -55,7 +55,10 @@
       <view class="phrase-card {{item.isFav ? 'faved' : ''}}" bindtap="onCardTap" data-id="{{item.id}}" data-italian="{{item.italian}}">
         <view class="card-body">
           <view class="card-main">
-            <text class="italian-text">{{item.italian}}</text>
+            <view class="italian-row">
+              <text class="italian-text">{{item.italian}}</text>
+              <text class="tts-hint">🔊</text>
+            </view>
             <text class="pronunciation-text">{{item.pronunciation}}</text>
             <text class="chinese-text">{{item.chinese}}</text>
           </view>

@@ -153,12 +153,23 @@
   flex: 1;
 }
 
+.italian-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 4rpx;
+}
+
 .italian-text {
   font-size: 36rpx;
   font-weight: 700;
   color: #C1440E;
-  display: block;
-  margin-bottom: 4rpx;
+}
+
+.tts-hint {
+  font-size: 22rpx;
+  margin-left: 10rpx;
+  opacity: 0.45;
 }
 
 .pronunciation-text {
