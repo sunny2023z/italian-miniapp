@@ -75,24 +75,17 @@ function playText(text) {
   console.log('[audio] downloading:', url);
   _pending[key] = true;
 
-  // 先给个 loading 提示（可选）
-  wx.showLoading({ title: '加载发音...', mask: false });
-
   wx.downloadFile({
     url,
     success: (res) => {
-      wx.hideLoading();
       console.log('[audio] download success, status:', res.statusCode, 'path:', res.tempFilePath);
       delete _pending[key];
       if (res.statusCode === 200) {
         _ttsCache[key] = res.tempFilePath;
         _playLocal(res.tempFilePath);
-      } else {
-        console.error('[audio] download status not 200:', res.statusCode);
       }
     },
     fail: (e) => {
-      wx.hideLoading();
       delete _pending[key];
       console.error('[audio] downloadFile failed:', JSON.stringify(e));
     },
