@@ -160,48 +160,16 @@
   margin-bottom: 4rpx;
 }
 
-.token-wrap {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: baseline;
-  flex: 1;
-}
-
-/* 默认：名词/其他 — 深红色（原 italian-text 颜色） */
-.token {
+.italian-text {
   font-size: 36rpx;
   font-weight: 700;
   color: #C1440E;
-  line-height: 1.3;
-}
-
-/* 动词 — 红色（稍深，强调） */
-.token-verb {
-  color: #C1440E;
-}
-
-/* 冠词 — 蓝色 */
-.token-article {
-  color: #2979C8;
-}
-
-/* 名词 — 深绿色 */
-.token-noun {
-  color: #2E7D32;
-}
-
-/* 空格/标点保持中性 */
-.token-space {
-  color: #555;
-  font-weight: 400;
 }
 
 .tts-hint {
   font-size: 22rpx;
   margin-left: 10rpx;
   opacity: 0.45;
-  flex-shrink: 0;
 }
 
 .pronunciation-text {

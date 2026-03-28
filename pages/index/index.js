@@ -5,49 +5,6 @@ const { playItalian, playText, prefetchTTS } = require('../../utils/audio');
 const SERVER = 'https://italian-translate.jellyzen.fun';
 const TRANSLATE_DEBOUNCE = 400;
 
-// 冠词列表（蓝色）
-const ARTICLES = new Set([
-  'il','lo','la','i','gli','le',
-  'un','uno','una','un\'',
-  'del','dello','della','dei','degli','delle',
-  'al','allo','alla','ai','agli','alle',
-  'dal','dallo','dalla','dai','dagli','dalle',
-  'nel','nello','nella','nei','negli','nelle',
-  'sul','sullo','sulla','sui','sugli','sulle',
-  'col','con',
-]);
-
-// 常用动词列表（红色）
-const VERBS = new Set([
-  'vorrei','voglio','vuoi','vuole','vogliamo','volete','vogliono',
-  'sono','sei','è','siamo','siete','sono',
-  'ho','hai','ha','abbiamo','avete','hanno',
-  'posso','puoi','può','possiamo','potete','possono',
-  'vado','vai','va','andiamo','andate','vanno',
-  'parla','parli','parlate','parliamo','parlo',
-  'capisco','capisce',
-  'giri','gira','vada','vai',
-  'ripetere','pagare','chiamare','arrivo','arrivi','arriva',
-  'consiglia','consigli',
-  'è','mi','ci','si',
-]);
-
-/**
- * 把意大利语句子拆成带颜色 type 的 token 数组
- * type: 'verb'(红) | 'article'(蓝) | 'noun'(默认深色)
- */
-function tokenize(italian) {
-  // 按空格和标点分词，保留标点
-  const parts = italian.split(/(\s+|[,!?./…']+)/);
-  return parts.map(part => {
-    if (!part || /^\s+$/.test(part)) return { text: part, type: 'space' };
-    const lower = part.toLowerCase().replace(/[',!?.…]/g, '');
-    if (VERBS.has(lower)) return { text: part, type: 'verb' };
-    if (ARTICLES.has(lower)) return { text: part, type: 'article' };
-    return { text: part, type: 'noun' };
-  }).filter(t => t.text !== '');
-}
-
 Page({
   data: {
     categories: CATEGORIES,
@@ -81,11 +38,7 @@ Page({
 
   _applyFilter() {
     const { selectedCat, searchText, favorites } = this.data;
-    let list = ALL_PHRASES.map(p => ({
-      ...p,
-      isFav: !!favorites[p.id],
-      tokens: tokenize(p.italian),
-    }));
+    let list = ALL_PHRASES.map(p => ({ ...p, isFav: !!favorites[p.id] }));
     if (selectedCat >= 0) {
       list = list.filter(p => p.cat === selectedCat);
     }

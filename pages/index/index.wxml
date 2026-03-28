@@ -56,10 +56,7 @@
         <view class="card-body">
           <view class="card-main">
             <view class="italian-row">
-              <view class="token-wrap">
-                <text wx:for="{{item.tokens}}" wx:key="index"
-                  class="token token-{{item.type}}">{{item.text}}</text>
-              </view>
+              <text class="italian-text">{{item.italian}}</text>
               <text class="tts-hint">🔊</text>
             </view>
             <text class="pronunciation-text">{{item.pronunciation}}</text>
