@@ -3,7 +3,6 @@ const { ALL_PHRASES, CATEGORIES } = require('../../data/phrases');
 const { playItalian, playText } = require('../../utils/audio');
 
 const SERVER = 'http://43.162.83.109:3000';
-const TRANSLATE_DEBOUNCE = 600;
 
 Page({
   data: {
@@ -15,8 +14,6 @@ Page({
     translateResult: '',
     translateLoading: false,
   },
-
-  _translateTimer: null,
 
   onLoad() {
     this._loadState();
@@ -39,11 +36,9 @@ Page({
       ...p,
       isFav: !!favorites[p.id],
     }));
-
     if (selectedCat >= 0) {
       list = list.filter(p => p.cat === selectedCat);
     }
-
     if (searchText.trim()) {
       const q = searchText.trim().toLowerCase();
       list = list.filter(p =>
@@ -52,53 +47,46 @@ Page({
         p.pronunciation.toLowerCase().includes(q)
       );
     }
-
     this.setData({ filteredPhrases: list });
   },
 
-  _scheduleTranslate(text) {
-    if (this._translateTimer) clearTimeout(this._translateTimer);
-    if (!text.trim()) {
-      this.setData({ translateResult: '', translateLoading: false });
-      return;
-    }
-    this.setData({ translateLoading: true });
-    this._translateTimer = setTimeout(() => {
-      const isChinese = /[\u4e00-\u9fa5]/.test(text);
-      const from = isChinese ? 'zh-CN' : 'it';
-      const to = isChinese ? 'it' : 'zh-CN';
-      wx.request({
-        url: `${SERVER}/translate`,
-        data: { text: text.trim(), from, to },
-        success: (res) => {
-          if (res.statusCode === 200 && res.data.result) {
-            this.setData({ translateResult: res.data.result });
-          } else {
-            this.setData({ translateResult: '' });
-          }
-        },
-        fail: () => this.setData({ translateResult: '' }),
-        complete: () => this.setData({ translateLoading: false }),
-      });
-    }, TRANSLATE_DEBOUNCE);
-  },
-
+  // 实时输入：只过滤词条，不触发翻译
   onSearchInput(e) {
     const val = e.detail.value;
-    this.setData({ searchText: val }, () => this._applyFilter());
-    this._scheduleTranslate(val);
+    this.setData({ searchText: val, translateResult: '' }, () => this._applyFilter());
+  },
+
+  // 回车/确认：触发翻译
+  onSearchConfirm(e) {
+    const val = e.detail.value;
+    if (val.trim()) this._doTranslate(val.trim());
+  },
+
+  _doTranslate(text) {
+    this.setData({ translateLoading: true, translateResult: '' });
+    const isChinese = /[\u4e00-\u9fa5]/.test(text);
+    wx.request({
+      url: `${SERVER}/translate`,
+      data: { text, from: isChinese ? 'zh-CN' : 'it', to: isChinese ? 'it' : 'zh-CN' },
+      success: (res) => {
+        if (res.statusCode === 200 && res.data.result) {
+          this.setData({ translateResult: res.data.result });
+        }
+      },
+      fail: () => wx.showToast({ title: '翻译失败，请检查网络', icon: 'none' }),
+      complete: () => this.setData({ translateLoading: false }),
+    });
   },
 
   onSearchClear() {
-    if (this._translateTimer) clearTimeout(this._translateTimer);
     this.setData({ searchText: '', translateResult: '', translateLoading: false }, () => this._applyFilter());
   },
 
   onPlayTranslateResult() {
-    const text = this.data.translateResult;
-    if (!text) return;
-    const isChinese = /[\u4e00-\u9fa5]/.test(this.data.searchText);
-    playText(isChinese ? text : this.data.searchText);
+    const { translateResult, searchText } = this.data;
+    if (!translateResult) return;
+    const isChinese = /[\u4e00-\u9fa5]/.test(searchText);
+    playText(isChinese ? translateResult : searchText);
   },
 
   onCatTap(e) {
@@ -108,8 +96,7 @@ Page({
   },
 
   onCardTap(e) {
-    const id = parseInt(e.currentTarget.dataset.id);
-    playItalian(id);
+    playItalian(parseInt(e.currentTarget.dataset.id));
   },
 
   onToggleFav(e) {

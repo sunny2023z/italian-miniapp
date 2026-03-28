@@ -11,6 +11,8 @@
         placeholder-class="search-placeholder"
         value="{{searchText}}"
         bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+        confirm-type="search"
       />
       <view wx:if="{{translateLoading}}" class="search-spinner">···</view>
       <view wx:elif="{{searchText}}" class="search-clear" catchtap="onSearchClear">✕</view>
