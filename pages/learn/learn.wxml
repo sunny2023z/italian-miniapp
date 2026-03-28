@@ -399,6 +399,18 @@
 
       <scroll-view class="sheet-scroll" scroll-y="true">
 
+        <!-- 概念前置（仅有 concept 字段的课程显示） -->
+        <view wx:if="{{currentLesson.concept}}" class="concept-box">
+          <view class="concept-header">
+            <text class="concept-icon">💡</text>
+            <text class="concept-title">先理解这个概念</text>
+          </view>
+          <text class="concept-text">{{currentLesson.concept}}</text>
+          <view wx:if="{{currentLesson.conceptTip}}" class="concept-tip">
+            <text class="concept-tip-text">{{currentLesson.conceptTip}}</text>
+          </view>
+        </view>
+
         <!-- 词汇 -->
         <view class="sheet-section-title">📖 词汇（{{currentLesson.vocab.length}}个）</view>
         <view wx:for="{{currentLesson.vocab}}" wx:key="italian"

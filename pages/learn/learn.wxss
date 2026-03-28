@@ -1171,3 +1171,51 @@
 /* badge-foundation / badge-verbs 对应路径说明 */
 .path-ov-badge.badge-foundation { background: #FFF3CD; color: #856404; }
 .path-ov-badge.badge-verbs      { background: #E8F5E9; color: #2E7D32; }
+
+/* ─── 概念前置框 ──────────────────────────────────────────────────────────── */
+.concept-box {
+  background: linear-gradient(135deg, #FFF8F0 0%, #FEF0E0 100%);
+  border-radius: 16rpx;
+  border-left: 6rpx solid #C1440E;
+  padding: 28rpx 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.concept-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.concept-icon {
+  font-size: 36rpx;
+  margin-right: 12rpx;
+}
+
+.concept-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #8B2A08;
+  letter-spacing: 1rpx;
+}
+
+.concept-text {
+  font-size: 28rpx;
+  line-height: 1.75;
+  color: #4A3020;
+}
+
+.concept-tip {
+  background: rgba(193, 68, 14, 0.08);
+  border-radius: 10rpx;
+  padding: 16rpx 18rpx;
+  margin-top: 18rpx;
+}
+
+.concept-tip-text {
+  font-size: 26rpx;
+  color: #C1440E;
+  font-weight: 500;
+  line-height: 1.6;
+}
