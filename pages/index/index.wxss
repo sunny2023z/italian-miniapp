@@ -73,9 +73,6 @@
   flex-shrink: 0;
 }
 
-  background: #FFFFFF;
-}
-
 .search-inner {
   display: flex;
   align-items: center;
