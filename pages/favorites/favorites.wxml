@@ -1,0 +1,31 @@
+<!-- pages/favorites/favorites.wxml -->
+<view class="page-container">
+
+  <view wx:if="{{phrases.length === 0}}" class="empty-state">
+    <text class="empty-emoji">⭐</text>
+    <text class="empty-text">还没有收藏</text>
+    <text class="empty-hint">在速查页点 ☆ 收藏常用表达</text>
+  </view>
+
+  <scroll-view wx:else class="phrase-list" scroll-y="true" enhanced="true" bounces="true">
+    <view wx:for="{{phrases}}" wx:key="id" class="phrase-wrapper">
+      <view class="phrase-card {{item.isFav ? 'faved' : ''}}" bindtap="onCardTap" data-id="{{item.id}}">
+        <view class="card-body">
+          <view class="card-main">
+            <text class="italian-text">{{item.italian}}</text>
+            <text class="pronunciation-text">{{item.pronunciation}}</text>
+            <text class="chinese-text">{{item.chinese}}</text>
+          </view>
+          <view class="card-actions">
+            <view class="action-icon fav-on" catchtap="onToggleFav" data-id="{{item.id}}">⭐</view>
+          </view>
+        </view>
+        <view wx:if="{{item.tip}}" class="card-tip">
+          <text class="tip-text">💡 {{item.tip}}</text>
+        </view>
+      </view>
+    </view>
+    <view style="height: 40rpx;"></view>
+  </scroll-view>
+
+</view>

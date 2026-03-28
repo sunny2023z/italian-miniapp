@@ -209,12 +209,10 @@
   color: #F0A020;
 }
 
-.learned-off {
   font-size: 34rpx;
   color: #D0C0B0;
 }
 
-.learned-on {
   font-size: 34rpx;
   color: #6B7C3B;
   font-weight: 700;
@@ -234,7 +232,6 @@
 }
 
 /* ── 底部统计 ── */
-.stats-bar {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -244,28 +241,22 @@
   border-top: 1rpx solid #F0E0D0;
 }
 
-.stat-item {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.stat-num {
   font-size: 40rpx;
   font-weight: 700;
   color: #2C1810;
 }
 
-.stat-num.primary { color: #C1440E; }
-.stat-num.gold    { color: #D4920A; }
 
-.stat-label {
   font-size: 22rpx;
   color: #8B7265;
   margin-top: 2rpx;
 }
 
-.stat-divider {
   width: 1rpx;
   height: 50rpx;
   background: #E8D5C4;

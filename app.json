@@ -1,5 +1,5 @@
 {
-  "pages": ["pages/index/index", "pages/learn/learn"],
+  "pages": ["pages/index/index", "pages/learn/learn", "pages/favorites/favorites"],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#C1440E",
@@ -13,8 +13,9 @@
     "backgroundColor": "#FFFFFF",
     "borderStyle": "white",
     "list": [
-      {"pagePath": "pages/index/index", "text": "🗺️ 速查"},
-      {"pagePath": "pages/learn/learn", "text": "🎓 深度学习"}
+      {"pagePath": "pages/index/index", "text": "速查"},
+      {"pagePath": "pages/learn/learn", "text": "学习"},
+      {"pagePath": "pages/favorites/favorites", "text": "收藏"}
     ]
   },
   "sitemapLocation": "sitemap.json"

@@ -1,0 +1,117 @@
+/* pages/favorites/favorites.wxss */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #FAF0E6;
+  overflow: hidden;
+}
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+}
+
+.empty-emoji {
+  font-size: 100rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #2C1810;
+  margin-bottom: 12rpx;
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: #8B7265;
+  text-align: center;
+}
+
+.phrase-list {
+  flex: 1;
+  overflow: hidden;
+}
+
+.phrase-wrapper {
+  padding: 0 24rpx;
+  margin-bottom: 12rpx;
+}
+
+.phrase-wrapper:first-child {
+  margin-top: 16rpx;
+}
+
+.phrase-card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 20rpx 20rpx 16rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.06);
+  border-left: 6rpx solid #F0A020;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.card-main {
+  flex: 1;
+}
+
+.italian-text {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #C1440E;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.pronunciation-text {
+  font-size: 22rpx;
+  color: #8B7265;
+  font-style: italic;
+  display: block;
+  margin-bottom: 6rpx;
+}
+
+.chinese-text {
+  font-size: 28rpx;
+  color: #2C1810;
+  display: block;
+}
+
+.card-actions {
+  padding-left: 20rpx;
+}
+
+.action-icon {
+  font-size: 40rpx;
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.fav-on { color: #F0A020; }
+
+.card-tip {
+  margin-top: 10rpx;
+  padding-top: 10rpx;
+  border-top: 1rpx solid #F0E0D0;
+}
+
+.tip-text {
+  font-size: 22rpx;
+  color: #8B7265;
+  line-height: 1.5;
+}

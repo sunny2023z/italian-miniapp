@@ -16,16 +16,16 @@
       <view wx:elif="{{searchText}}" class="search-clear" catchtap="onSearchClear">✕</view>
     </view>
     <!-- 翻译结果 -->
-    <view wx:if="{{translateResult}}" class="translate-result-row">
+    <view wx:if="{{translateResult}}" class="translate-result-row" catchtap="onPlayTranslateResult">
       <view class="translate-result-left">
         <text class="translate-result-text">{{translateResult}}</text>
       </view>
-      <view class="translate-tts-btn" catchtap="onPlayTranslateResult">🔊</view>
+      <view class="translate-tts-btn">🔊</view>
     </view>
   </view>
 
-  <!-- Category Filter -->
-  <scroll-view class="cat-scroll" scroll-x="true" enhanced="true" show-scrollbar="false">
+  <!-- 分类 Tag：无搜索时显示 -->
+  <scroll-view wx:if="{{!searchText}}" class="cat-scroll" scroll-x="true" enhanced="true" show-scrollbar="false">
     <view class="cat-list">
       <view class="cat-chip {{selectedCat === -1 ? 'active' : ''}}" bindtap="onCatTap" data-id="-1">全部</view>
       <view
@@ -40,60 +40,32 @@
   <scroll-view class="phrase-list" scroll-y="true" enhanced="true" bounces="true">
 
     <view wx:for="{{filteredPhrases}}" wx:key="id" class="phrase-wrapper">
-      <!-- 点卡片 = 播放发音 -->
       <view
-        class="phrase-card {{item.isLearned ? 'learned' : ''}} {{item.isFav ? 'faved' : ''}}"
+        class="phrase-card {{item.isFav ? 'faved' : ''}}"
         bindtap="onCardTap"
         data-id="{{item.id}}"
       >
-        <!-- 主体内容 -->
         <view class="card-body">
           <view class="card-main">
             <text class="italian-text">{{item.italian}}</text>
             <text class="pronunciation-text">{{item.pronunciation}}</text>
             <text class="chinese-text">{{item.chinese}}</text>
           </view>
-          <!-- 右侧操作：收藏 + 已学 -->
           <view class="card-actions">
             <view
               class="action-icon {{item.isFav ? 'fav-on' : 'fav-off'}}"
               catchtap="onToggleFav"
               data-id="{{item.id}}"
             >{{item.isFav ? '⭐' : '☆'}}</view>
-            <view
-              class="action-icon {{item.isLearned ? 'learned-on' : 'learned-off'}}"
-              catchtap="onMarkLearned"
-              data-id="{{item.id}}"
-            >{{item.isLearned ? '✓' : '○'}}</view>
           </view>
         </view>
-
-        <!-- tip：固定展示，不需要展开 -->
         <view wx:if="{{item.tip}}" class="card-tip">
           <text class="tip-text">💡 {{item.tip}}</text>
         </view>
       </view>
     </view>
 
-    <view style="height: 120rpx;"></view>
+    <view style="height: 40rpx;"></view>
   </scroll-view>
-
-  <!-- Bottom Stats -->
-  <view class="stats-bar">
-    <view class="stat-item">
-      <text class="stat-num">{{filteredPhrases.length}}</text>
-      <text class="stat-label">个短语</text>
-    </view>
-    <view class="stat-divider"></view>
-    <view class="stat-item">
-      <text class="stat-num primary">{{learnedCount}}</text>
-      <text class="stat-label">已学</text>
-    </view>
-    <view class="stat-divider"></view>
-    <view class="stat-item">
-      <text class="stat-num gold">{{favCount}}</text>
-      <text class="stat-label">收藏</text>
-    </view>
-  </view>
 
 </view>
