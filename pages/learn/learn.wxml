@@ -205,6 +205,7 @@
           <view wx:for="{{vowels}}" wx:key="letter" class="vowel-pill" bindtap="onVowelTap" data-letter="{{item.letter}}">
             <text class="vowel-letter">{{item.letter}}</text>
             <text class="vowel-phonetic">{{item.phonetic}}</text>
+            <text class="vowel-tts">🔊</text>
           </view>
         </view>
 
@@ -229,11 +230,11 @@
         <view class="sheet-section-title">完整字母表（21字母）</view>
         <text class="alphabet-note">意大利字母表没有 J K W X Y（仅用于外来词）</text>
         <view class="alphabet-grid">
-          <view wx:for="{{alphabet}}" wx:key="letter" class="alpha-item">
+          <view wx:for="{{alphabet}}" wx:key="letter" class="alpha-item" bindtap="onLetterTTSTap" data-letter="{{item.letter}}">
             <text class="alpha-letter">{{item.letter}}</text>
             <text class="alpha-name">{{item.name}}</text>
             <text class="alpha-phonetic">{{item.phonetic}}</text>
-            <view class="alpha-tts-btn" catchtap="onLetterTTSTap" data-letter="{{item.letter}}">🔊</view>
+            <view class="alpha-tts-btn">🔊</view>
           </view>
         </view>
 

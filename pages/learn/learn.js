@@ -429,8 +429,12 @@ Page({
   },
 
   onVowelTap(e) {
-    const item = VOWELS.find(v => v.letter === e.currentTarget.dataset.letter);
-    if (item) wx.showToast({ title: item.letter + ' → ' + item.phonetic, icon: 'none', duration: 1500 });
+    const letter = e.currentTarget.dataset.letter;
+    const item = VOWELS.find(v => v.letter === letter);
+    if (item) {
+      playText(item.letter);
+      wx.showToast({ title: item.letter + ' → ' + item.phonetic, icon: 'none', duration: 1200 });
+    }
   },
 
   onLetterTTSTap(e) {
