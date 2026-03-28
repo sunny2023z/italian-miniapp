@@ -1,26 +1,24 @@
 <!-- pages/index/index.wxml -->
 <view class="page-container">
 
-  <!-- 智能搜索框（搜索 + 翻译二合一） -->
+  <!-- 智能搜索框 -->
   <view class="search-bar">
     <view class="search-inner">
       <text class="search-icon">🔍</text>
       <input
         class="search-input"
-        placeholder="搜索短语 或 输入中文翻译..."
+        placeholder="搜索或输入任意词汇..."
         placeholder-class="search-placeholder"
         value="{{searchText}}"
         bindinput="onSearchInput"
-        confirm-type="search"
-        bindconfirm="onSmartConfirm"
       />
-      <view wx:if="{{searchText}}" class="search-clear" catchtap="onSearchClear">✕</view>
-      <view wx:if="{{translateLoading}}" class="search-loading">…</view>
+      <view wx:if="{{translateLoading}}" class="search-spinner">·  ·  ·</view>
+      <view wx:elif="{{searchText}}" class="search-clear" catchtap="onSearchClear">✕</view>
     </view>
-    <!-- 翻译结果 -->
+
+    <!-- 翻译结果：有输入就展示 -->
     <view wx:if="{{translateResult}}" class="translate-result-row">
       <view class="translate-result-left">
-        <text class="translate-label">🇮🇹 翻译结果</text>
         <text class="translate-result-text">{{translateResult}}</text>
       </view>
       <view class="translate-tts-btn" catchtap="onPlayTranslateResult">🔊</view>
@@ -41,9 +39,15 @@
 
   <!-- Phrase List -->
   <scroll-view class="phrase-list" scroll-y="true" enhanced="true" bounces="true">
-    <view wx:if="{{filteredPhrases.length === 0 && !translateResult}}" class="empty-state">
-      <text class="emoji">🔍</text>
-      <text class="text">没有找到相关短语</text>
+
+    <!-- 有输入但词条为空时，不显示"没找到"（翻译结果已经在上面了） -->
+    <view wx:if="{{filteredPhrases.length === 0 && !searchText}}" class="empty-state">
+      <text class="emoji">🇮🇹</text>
+      <text class="text">输入词汇开始搜索或翻译</text>
+    </view>
+
+    <view wx:if="{{filteredPhrases.length > 0 && searchText}}" class="match-hint">
+      速查词条匹配到 {{filteredPhrases.length}} 条
     </view>
 
     <view wx:for="{{filteredPhrases}}" wx:key="id" class="phrase-wrapper">
@@ -52,7 +56,6 @@
         bindtap="onCardTap"
         data-id="{{item.id}}"
       >
-        <!-- Card Header -->
         <view class="card-header">
           <view class="card-main">
             <text class="italian-text">{{item.italian}}</text>
@@ -67,10 +70,8 @@
           </view>
         </view>
 
-        <!-- Chinese -->
         <text class="chinese-text">{{item.chinese}}</text>
 
-        <!-- Expanded Details -->
         <view class="card-details" wx:if="{{expandedId === item.id}}">
           <view class="divider"></view>
           <view class="tip-row">

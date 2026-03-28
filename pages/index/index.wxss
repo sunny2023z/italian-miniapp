@@ -8,7 +8,7 @@
 
 /* Search Bar */
 .search-bar {
-  padding: 16rpx 24rpx 0;
+  padding: 16rpx 24rpx 12rpx;
   background: #FFFFFF;
 }
 
@@ -21,12 +21,19 @@
 }
 
 .search-loading {
-  font-size: 28rpx;
+  font-size: 22rpx;
   color: #C1440E;
+  letter-spacing: 4rpx;
   padding: 0 8rpx;
 }
 
-/* 翻译结果（内嵌在搜索框下方） */
+.match-hint {
+  font-size: 22rpx;
+  color: #A08878;
+  padding: 12rpx 24rpx 4rpx;
+}
+
+
 .translate-result-row {
   display: flex;
   flex-direction: row;

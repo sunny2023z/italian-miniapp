@@ -3,6 +3,7 @@ const { ALL_PHRASES, CATEGORIES } = require('../../data/phrases');
 const { playItalian, playText } = require('../../utils/audio');
 
 const SERVER = 'http://43.162.83.109:3000';
+const TRANSLATE_DEBOUNCE = 600; // ms
 
 Page({
   data: {
@@ -18,6 +19,8 @@ Page({
     translateResult: '',
     translateLoading: false,
   },
+
+  _translateTimer: null,
 
   onLoad() {
     this._loadState();
@@ -40,6 +43,7 @@ Page({
     });
   },
 
+  // 搜索：中文、意大利语、发音全部模糊匹配
   _applyFilter() {
     const { selectedCat, searchText, learned, favorites } = this.data;
     let list = ALL_PHRASES.map((p) => ({
@@ -57,76 +61,66 @@ Page({
       list = list.filter(p =>
         p.italian.toLowerCase().includes(q) ||
         p.chinese.includes(q) ||
-        p.pronunciation.includes(q)
+        p.pronunciation.toLowerCase().includes(q)
       );
     }
 
     this.setData({ filteredPhrases: list });
   },
 
-  // ── 智能搜索框 ───────────────────────────────────────
-  // 判断是否包含中文
-  _isChinese(text) {
-    return /[\u4e00-\u9fa5]/.test(text);
+  // 翻译（防抖）：自动判断方向
+  _scheduleTranslate(text) {
+    if (this._translateTimer) clearTimeout(this._translateTimer);
+    if (!text.trim()) {
+      this.setData({ translateResult: '', translateLoading: false });
+      return;
+    }
+    this.setData({ translateLoading: true });
+    this._translateTimer = setTimeout(() => {
+      const isChinese = /[\u4e00-\u9fa5]/.test(text);
+      const from = isChinese ? 'zh-CN' : 'it';
+      const to = isChinese ? 'it' : 'zh-CN';
+      wx.request({
+        url: `${SERVER}/translate`,
+        data: { text: text.trim(), from, to },
+        success: (res) => {
+          if (res.statusCode === 200 && res.data.result) {
+            this.setData({ translateResult: res.data.result });
+          } else {
+            this.setData({ translateResult: '' });
+          }
+        },
+        fail: () => this.setData({ translateResult: '' }),
+        complete: () => this.setData({ translateLoading: false }),
+      });
+    }, TRANSLATE_DEBOUNCE);
   },
 
+  // 输入框变化：搜索 + 翻译同时跑
   onSearchInput(e) {
     const val = e.detail.value;
-    // 有中文时清掉上次翻译结果，等用户确认再翻译
-    if (this._isChinese(val)) {
-      this.setData({ searchText: val, translateResult: '', filteredPhrases: [] });
-    } else {
-      this.setData({ searchText: val, translateResult: '' }, () => this._applyFilter());
-    }
-  },
-
-  // 键盘回车/确认键：中文就翻译
-  onSmartConfirm() {
-    const text = this.data.searchText.trim();
-    if (!text) return;
-    if (this._isChinese(text)) {
-      this._doTranslate(text);
-    }
+    this.setData({ searchText: val }, () => this._applyFilter());
+    this._scheduleTranslate(val);
   },
 
   onSearchClear() {
-    this.setData({ searchText: '', translateResult: '' }, () => this._applyFilter());
-  },
-
-  _doTranslate(text) {
-    this.setData({ translateLoading: true, translateResult: '' });
-    wx.request({
-      url: `${SERVER}/translate`,
-      data: { text, from: 'zh-CN', to: 'it' },
-      success: (res) => {
-        if (res.statusCode === 200 && res.data.result) {
-          this.setData({ translateResult: res.data.result });
-        } else {
-          wx.showToast({ title: '翻译失败，请重试', icon: 'none' });
-        }
-      },
-      fail: () => wx.showToast({ title: '网络错误', icon: 'none' }),
-      complete: () => this.setData({ translateLoading: false }),
-    });
+    if (this._translateTimer) clearTimeout(this._translateTimer);
+    this.setData({ searchText: '', translateResult: '', translateLoading: false }, () => this._applyFilter());
   },
 
   onPlayTranslateResult() {
     const text = this.data.translateResult;
-    if (text) playText(text);
+    if (!text) return;
+    // 如果翻译结果是意大利语就朗读，否则也朗读（用 it 语音）
+    const isChinese = /[\u4e00-\u9fa5]/.test(this.data.searchText);
+    playText(isChinese ? text : this.data.searchText);
   },
 
-
+  // ── 速查列表 ──────────────────────────────────────────
+  onCatTap(e) {
     const id = parseInt(e.currentTarget.dataset.id);
     const selectedCat = this.data.selectedCat === id ? -1 : id;
     this.setData({ selectedCat }, () => this._applyFilter());
-  },
-
-  onSearchInput(e) {
-    this.setData({ searchText: e.detail.value }, () => this._applyFilter());
-  },
-
-  onSearchClear() {
-    this.setData({ searchText: '' }, () => this._applyFilter());
   },
 
   onCardTap(e) {
