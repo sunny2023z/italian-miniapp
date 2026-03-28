@@ -1,6 +1,8 @@
 // pages/index/index.js
 const { ALL_PHRASES, CATEGORIES } = require('../../data/phrases');
-const { playItalian, stopAudio } = require('../../utils/audio');
+const { playItalian, playText } = require('../../utils/audio');
+
+const SERVER = 'http://43.162.83.109:3000';
 
 Page({
   data: {
@@ -13,10 +15,11 @@ Page({
     favorites: {},
     learnedCount: 0,
     favCount: 0,
-    ttsPlaying: false,
+    // 翻译框
+    translateInput: '',
+    translateResult: '',
+    translateLoading: false,
   },
-
-  _audioCtx: null,
 
   onLoad() {
     this._loadState();
@@ -63,6 +66,46 @@ Page({
     this.setData({ filteredPhrases: list });
   },
 
+  // ── 翻译框 ────────────────────────────────────────────
+  onTranslateInput(e) {
+    this.setData({ translateInput: e.detail.value, translateResult: '' });
+  },
+
+  onTranslateClear() {
+    this.setData({ translateInput: '', translateResult: '' });
+  },
+
+  onTranslate() {
+    const text = this.data.translateInput.trim();
+    if (!text) return;
+
+    this.setData({ translateLoading: true, translateResult: '' });
+
+    wx.request({
+      url: `${SERVER}/translate`,
+      data: { text, from: 'zh-CN', to: 'it' },
+      success: (res) => {
+        if (res.statusCode === 200 && res.data.result) {
+          this.setData({ translateResult: res.data.result });
+        } else {
+          wx.showToast({ title: '翻译失败，请重试', icon: 'none' });
+        }
+      },
+      fail: () => {
+        wx.showToast({ title: '网络错误', icon: 'none' });
+      },
+      complete: () => {
+        this.setData({ translateLoading: false });
+      }
+    });
+  },
+
+  onPlayTranslateResult() {
+    const text = this.data.translateResult;
+    if (text) playText(text);
+  },
+
+  // ── 速查列表 ──────────────────────────────────────────
   onCatTap(e) {
     const id = parseInt(e.currentTarget.dataset.id);
     const selectedCat = this.data.selectedCat === id ? -1 : id;
@@ -111,8 +154,6 @@ Page({
 
   onTTSTap(e) {
     const id = parseInt(e.currentTarget.dataset.id);
-    const pronunciation = e.currentTarget.dataset.pronunciation;
-    // 播放本地预录音频，id 对应 audio/{id}.mp3
     playItalian(id);
   },
 });

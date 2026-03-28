@@ -1,6 +1,29 @@
 <!-- pages/index/index.wxml -->
 <view class="page-container">
 
+  <!-- 翻译框 -->
+  <view class="translate-card">
+    <view class="translate-input-row">
+      <input
+        class="translate-input"
+        placeholder="输入中文，翻译成意大利语..."
+        placeholder-class="translate-placeholder"
+        value="{{translateInput}}"
+        bindinput="onTranslateInput"
+        confirm-type="search"
+        bindconfirm="onTranslate"
+      />
+      <view wx:if="{{translateInput}}" class="translate-clear" catchtap="onTranslateClear">✕</view>
+      <view class="translate-btn {{translateLoading ? 'loading' : ''}}" catchtap="onTranslate">
+        <text>{{translateLoading ? '…' : '翻译'}}</text>
+      </view>
+    </view>
+    <view wx:if="{{translateResult}}" class="translate-result-row">
+      <text class="translate-result-text">{{translateResult}}</text>
+      <view class="translate-tts-btn" catchtap="onPlayTranslateResult">🔊</view>
+    </view>
+  </view>
+
   <!-- Search Bar -->
   <view class="search-bar">
     <view class="search-inner">

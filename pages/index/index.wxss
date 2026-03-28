@@ -6,6 +6,84 @@
   background: #FAF0E6;
 }
 
+/* 翻译框 */
+.translate-card {
+  background: #FFFFFF;
+  margin: 20rpx 24rpx 0;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(193, 68, 14, 0.1);
+  border: 1rpx solid #F0D0C0;
+}
+
+.translate-input-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.translate-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #2C1810;
+  background: #FAF0E6;
+  border-radius: 12rpx;
+  padding: 14rpx 20rpx;
+  min-height: 60rpx;
+}
+
+.translate-placeholder {
+  color: #B09080;
+}
+
+.translate-clear {
+  font-size: 28rpx;
+  color: #B09080;
+  padding: 0 8rpx;
+}
+
+.translate-btn {
+  background: #C1440E;
+  color: #FFFFFF;
+  font-size: 26rpx;
+  font-weight: 700;
+  border-radius: 12rpx;
+  padding: 14rpx 24rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.translate-btn.loading {
+  opacity: 0.6;
+}
+
+.translate-result-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #F0E0D0;
+  gap: 16rpx;
+}
+
+.translate-result-text {
+  flex: 1;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #C1440E;
+  line-height: 1.4;
+}
+
+.translate-tts-btn {
+  font-size: 36rpx;
+  padding: 8rpx 12rpx;
+  border-radius: 12rpx;
+  background: rgba(193, 68, 14, 0.08);
+  flex-shrink: 0;
+}
+
 /* Search Bar */
 .search-bar {
   padding: 16rpx 24rpx 8rpx;
