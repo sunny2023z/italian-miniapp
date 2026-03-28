@@ -1,0 +1,174 @@
+/* app.wxss - Global styles */
+page {
+  background-color: #FAF0E6;
+  color: #2C1810;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 28rpx;
+}
+
+/* Utility classes */
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.text-primary {
+  color: #C1440E;
+}
+
+.text-secondary {
+  color: #6B7C3B;
+}
+
+.text-muted {
+  color: #8B7265;
+}
+
+.text-dark {
+  color: #2C1810;
+}
+
+/* Card base */
+.card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.08);
+  margin-bottom: 20rpx;
+  overflow: hidden;
+}
+
+/* Button base */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  padding: 18rpx 40rpx;
+  border: none;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  background: #C1440E;
+  color: #FFFFFF;
+}
+
+.btn-secondary {
+  background: #6B7C3B;
+  color: #FFFFFF;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2rpx solid #C1440E;
+  color: #C1440E;
+}
+
+.btn-ghost {
+  background: #FAF0E6;
+  color: #2C1810;
+}
+
+/* Tab selector */
+.tab-bar {
+  display: flex;
+  flex-direction: row;
+  background: #FFFFFF;
+  border-radius: 12rpx;
+  padding: 6rpx;
+  margin: 20rpx 30rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.06);
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  font-size: 26rpx;
+  color: #8B7265;
+  border-radius: 8rpx;
+  transition: all 0.2s;
+}
+
+.tab-item.active {
+  background: #C1440E;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* Progress bar */
+.progress-bar {
+  background: #E8D5C4;
+  border-radius: 8rpx;
+  height: 12rpx;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: #C1440E;
+  height: 100%;
+  border-radius: 8rpx;
+  transition: width 0.3s ease;
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #C1440E;
+  color: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 4rpx 14rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+/* Section header */
+.section-header {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #2C1810;
+  margin: 30rpx 30rpx 16rpx;
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+  color: #8B7265;
+}
+
+.empty-state .emoji {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-state .text {
+  font-size: 28rpx;
+  text-align: center;
+}

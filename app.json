@@ -1,0 +1,21 @@
+{
+  "pages": ["pages/index/index", "pages/learn/learn"],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#C1440E",
+    "navigationBarTitleText": "🇮🇹 意大利语",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#FAF0E6"
+  },
+  "tabBar": {
+    "color": "#8B6355",
+    "selectedColor": "#C1440E",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {"pagePath": "pages/index/index", "text": "🗺️ 速查"},
+      {"pagePath": "pages/learn/learn", "text": "🎓 深度学习"}
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}
