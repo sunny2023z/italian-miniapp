@@ -142,7 +142,7 @@ const LEVEL1_LESSONS = [
       { italian: 'La stazione',   chinese: '火车站',      pronunciation: '拉 斯塔兹欧内' },
       { italian: 'Il metro',      chinese: '地铁',        pronunciation: '伊尔 梅托罗' },
     ],
-    grammar: "Dov'è 是问"在哪里"的万能句。后面加任何地点：Dov'è il bagno?（洗手间在哪里），Dov'è l'aeroporto?（机场在哪里）",
+    grammar: "Dov'è 是问『在哪里』的万能句。后面加任何地点：Dov'è il bagno?（洗手间在哪里），Dov'è l'aeroporto?（机场在哪里）",
     exercise: {
       question: '"左转"的意大利语是：',
       options: ['Vada dritto', 'Giri a destra', 'Giri a sinistra', 'Tornate indietro'],
@@ -178,7 +178,7 @@ const LEVEL1_LESSONS = [
       { italian: "C'è il Wi-Fi?",       chinese: '有 Wi-Fi 吗？',pronunciation: '切 伊尔 威费' },
       { italian: 'La chiave',           chinese: '钥匙',       pronunciation: '拉 基阿维' },
     ],
-    grammar: "Ho...（我有）在酒店非常重要。Ho una prenotazione（我有预订）。C'è 是"有...吗"的意思，超级实用。",
+    grammar: "Ho...（我有）在酒店非常重要。Ho una prenotazione（我有预订）。C'è 是『有...吗』的意思，超级实用。",
     exercise: {
       question: '"双人间"怎么说：',
       options: ['Camera singola', 'Camera doppia', 'Camera matrimoniale', 'Suite'],
