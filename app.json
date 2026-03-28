@@ -5,6 +5,19 @@
     "pages/learn/learn",
     "pages/favorites/favorites"
   ],
+  "subpackages": [
+    {
+      "root": "audio-pkg",
+      "name": "audio",
+      "pages": []
+    }
+  ],
+  "preloadRule": {
+    "pages/onboarding/onboarding": {
+      "network": "all",
+      "packages": ["audio"]
+    }
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#C1440E",

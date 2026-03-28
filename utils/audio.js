@@ -75,10 +75,10 @@ function playText(text) {
   if (!text || !text.trim()) return;
   const key = text.trim();
 
-  // 1. 本地打包音频（速查词条）
+  // 1. 本地打包音频（分包内）
   const id = _textToId[key];
   if (id !== undefined) {
-    _playLocal(`/audio/${id}.mp3`);
+    _playLocal(`/audio-pkg/audio/${id}.mp3`);
     return;
   }
 
