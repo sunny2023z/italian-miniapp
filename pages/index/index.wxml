@@ -39,7 +39,10 @@
       <view class="phrase-card {{translateFaved ? 'faved' : ''}} translate-card" bindtap="onPlayTranslateResult">
         <view class="card-body">
           <view class="card-main">
-            <text class="italian-text">{{translateItalian}}</text>
+            <view class="italian-row">
+              <text class="italian-text">{{translateItalian}}</text>
+              <text class="tts-hint">🔊</text>
+            </view>
             <text class="chinese-text">{{translateChinese}}</text>
           </view>
           <view class="card-actions">
