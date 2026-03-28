@@ -4,8 +4,6 @@ const { playItalian, playText, prefetchTTS } = require('../../utils/audio');
 
 const SERVER = 'https://italian-translate.jellyzen.fun';
 const TRANSLATE_DEBOUNCE = 400;
-const HISTORY_KEY = 'italian_search_history';
-const HISTORY_MAX = 10;
 
 Page({
   data: {
@@ -14,10 +12,6 @@ Page({
     selectedCat: -1,
     searchText: '',
     favorites: {},
-    // 历史搜索
-    searchHistory: [],
-    showHistory: false,
-    // 翻译结果
     translateResult: '',
     translateItalian: '',
     translateChinese: '',
@@ -39,8 +33,7 @@ Page({
 
   _loadState() {
     const favorites = wx.getStorageSync('italian_favorites') || {};
-    const searchHistory = wx.getStorageSync(HISTORY_KEY) || [];
-    this.setData({ favorites, searchHistory });
+    this.setData({ favorites });
   },
 
   _applyFilter() {
@@ -60,33 +53,10 @@ Page({
     this.setData({ filteredPhrases: list });
   },
 
-  // 保存搜索词到历史（去重，最新的排最前）
-  _saveHistory(text) {
-    if (!text.trim()) return;
-    let history = wx.getStorageSync(HISTORY_KEY) || [];
-    history = history.filter(h => h !== text);
-    history.unshift(text);
-    if (history.length > HISTORY_MAX) history = history.slice(0, HISTORY_MAX);
-    wx.setStorageSync(HISTORY_KEY, history);
-    this.setData({ searchHistory: history });
-  },
-
-  // 输入框获取焦点：显示历史
-  onSearchFocus() {
-    this.setData({ showHistory: true });
-  },
-
-  // 输入框失去焦点：延迟隐藏（留出点击历史的时间）
-  onSearchBlur() {
-    setTimeout(() => this.setData({ showHistory: false }), 200);
-  },
-
   onSearchInput(e) {
     const val = e.detail.value;
-    // 有输入时隐藏历史下拉，显示搜索结果
     this.setData({
       searchText: val,
-      showHistory: !val,
       translateResult: '', translateItalian: '', translateChinese: '', translateFaved: false,
     }, () => this._applyFilter());
     if (this._timer) clearTimeout(this._timer);
@@ -99,42 +69,16 @@ Page({
     const val = e.detail.value;
     if (!val.trim()) return;
     if (this._timer) clearTimeout(this._timer);
-    this._saveHistory(val.trim());
-    this.setData({ showHistory: false });
     this._doTranslate(val.trim());
   },
 
   onSearchClear() {
     if (this._timer) clearTimeout(this._timer);
     this.setData({
-      searchText: '', showHistory: true,
+      searchText: '',
       translateResult: '', translateItalian: '', translateChinese: '',
       translateFaved: false, translateLoading: false,
     }, () => this._applyFilter());
-  },
-
-  // 点击历史词条
-  onHistoryTap(e) {
-    const text = e.currentTarget.dataset.text;
-    this.setData({ searchText: text, showHistory: false,
-      translateResult: '', translateItalian: '', translateChinese: '', translateFaved: false,
-    }, () => this._applyFilter());
-    this._saveHistory(text);
-    this._doTranslate(text);
-  },
-
-  // 删除单条历史
-  onHistoryDelete(e) {
-    const text = e.currentTarget.dataset.text;
-    let history = (wx.getStorageSync(HISTORY_KEY) || []).filter(h => h !== text);
-    wx.setStorageSync(HISTORY_KEY, history);
-    this.setData({ searchHistory: history });
-  },
-
-  // 清空所有历史
-  onHistoryClear() {
-    wx.setStorageSync(HISTORY_KEY, []);
-    this.setData({ searchHistory: [] });
   },
 
   _doTranslate(text) {

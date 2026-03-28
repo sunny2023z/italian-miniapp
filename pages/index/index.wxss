@@ -202,67 +202,6 @@
   border-top: 3rpx solid #C1440E;
 }
 
-/* ── 历史搜索下拉 ── */
-.history-panel {
-  margin-top: 12rpx;
-  background: #FFFFFF;
-  border-radius: 16rpx;
-  overflow: hidden;
-  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.10);
-}
-
-.history-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18rpx 24rpx 10rpx;
-}
-
-.history-title {
-  font-size: 24rpx;
-  color: #B09080;
-  font-weight: 500;
-}
-
-.history-clear-btn {
-  font-size: 24rpx;
-  color: #C1440E;
-  padding: 4rpx 8rpx;
-}
-
-.history-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 18rpx 24rpx;
-  border-top: 1rpx solid #F5EDE3;
-}
-
-.history-item-text {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12rpx;
-}
-
-.history-icon {
-  font-size: 26rpx;
-  opacity: 0.5;
-}
-
-.history-word {
-  font-size: 30rpx;
-  color: #2C1810;
-}
-
-.history-del {
-  font-size: 24rpx;
-  color: #C0B0A0;
-  padding: 4rpx 8rpx;
-}
-
 /* Tip */
 .card-tip {
   margin-top: 10rpx;

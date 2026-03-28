@@ -11,28 +11,11 @@
         placeholder-class="search-placeholder"
         value="{{searchText}}"
         bindinput="onSearchInput"
-        bindfocus="onSearchFocus"
-        bindblur="onSearchBlur"
         bindconfirm="onSearchConfirm"
         confirm-type="search"
       />
       <view wx:if="{{translateLoading}}" class="search-spinner">···</view>
       <view wx:elif="{{searchText}}" class="search-clear" catchtap="onSearchClear">✕</view>
-    </view>
-
-    <!-- 历史搜索下拉 -->
-    <view wx:if="{{showHistory && searchHistory.length > 0}}" class="history-panel">
-      <view class="history-header">
-        <text class="history-title">最近搜索</text>
-        <view class="history-clear-btn" catchtap="onHistoryClear">清空</view>
-      </view>
-      <view wx:for="{{searchHistory}}" wx:key="*this" class="history-item">
-        <view class="history-item-text" catchtap="onHistoryTap" data-text="{{item}}">
-          <text class="history-icon">🕐</text>
-          <text class="history-word">{{item}}</text>
-        </view>
-        <view class="history-del" catchtap="onHistoryDelete" data-text="{{item}}">✕</view>
-      </view>
     </view>
   </view>
 
