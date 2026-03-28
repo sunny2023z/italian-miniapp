@@ -72,15 +72,23 @@ Page({
 
   _doTranslate(text) {
     const isChinese = /[\u4e00-\u9fa5]/.test(text);
+    const from = isChinese ? 'zh-CN' : 'it';
+    const to = isChinese ? 'it' : 'zh-CN';
+    console.log('[translate] 请求:', text, from, '->', to);
     wx.request({
       url: `${SERVER}/translate`,
-      data: { text, from: isChinese ? 'zh-CN' : 'it', to: isChinese ? 'it' : 'zh-CN' },
+      data: { text, from, to },
+      timeout: 10000,
       success: (res) => {
+        console.log('[translate] 响应:', res.statusCode, res.data);
         if (res.statusCode === 200 && res.data.result) {
           this.setData({ translateResult: res.data.result });
         }
       },
-      fail: () => {},
+      fail: (err) => {
+        console.error('[translate] 失败:', err);
+        wx.showToast({ title: '翻译失败: ' + (err.errMsg || ''), icon: 'none', duration: 3000 });
+      },
       complete: () => this.setData({ translateLoading: false }),
     });
   },
