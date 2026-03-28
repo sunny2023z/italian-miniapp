@@ -209,15 +209,6 @@
   color: #F0A020;
 }
 
-  font-size: 34rpx;
-  color: #D0C0B0;
-}
-
-  font-size: 34rpx;
-  color: #6B7C3B;
-  font-weight: 700;
-}
-
 /* Tip */
 .card-tip {
   margin-top: 10rpx;
