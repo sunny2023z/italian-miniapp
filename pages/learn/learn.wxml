@@ -453,14 +453,7 @@
         <view class="sheet-section-title">✏️ 小练习</view>
         <view class="exercise-box">
           <text class="exercise-question">{{currentLesson.exercise.question}}</text>
-          <view
-            wx:for="{{currentLesson.exercise.options}}"
-            wx:key="*this"
-            wx:for-index="optIdx"
-            class="exercise-option {{lessonAnswered && optIdx === currentLesson.exercise.answer ? 'correct' : ''}} {{lessonAnswered && selectedOption === optIdx && optIdx !== currentLesson.exercise.answer ? 'wrong' : ''}} {{selectedOption === optIdx && !lessonAnswered ? 'selected' : ''}}"
-            bindtap="{{lessonAnswered ? '' : 'onAnswerSelect'}}"
-            data-idx="{{optIdx}}"
-          >
+          <view wx:for="{{currentLesson.exercise.options}}" wx:key="*this" wx:for-index="optIdx" class="exercise-option {{lessonAnswered && optIdx === currentLesson.exercise.answer ? 'correct' : ''}} {{lessonAnswered && selectedOption === optIdx && optIdx !== currentLesson.exercise.answer ? 'wrong' : ''}} {{selectedOption === optIdx && !lessonAnswered ? 'selected' : ''}}" bindtap="{{lessonAnswered ? '' : 'onAnswerSelect'}}" data-idx="{{optIdx}}">
             <text class="option-letter">{{optIdx === 0 ? 'A' : optIdx === 1 ? 'B' : optIdx === 2 ? 'C' : 'D'}}</text>
             <text class="option-text">{{item}}</text>
             <text wx:if="{{lessonAnswered && optIdx === currentLesson.exercise.answer}}"> ✓</text>
