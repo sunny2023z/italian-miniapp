@@ -460,10 +460,7 @@
             wx:for="{{currentLesson.exercise.options}}"
             wx:key="*this"
             wx:for-index="optIdx"
-            class="exercise-option
-              {{lessonAnswered && optIdx === currentLesson.exercise.answer ? 'correct' : ''}}
-              {{lessonAnswered && selectedOption === optIdx && optIdx !== currentLesson.exercise.answer ? 'wrong' : ''}}
-              {{selectedOption === optIdx && !lessonAnswered ? 'selected' : ''}}"
+            class="exercise-option {{lessonAnswered && optIdx === currentLesson.exercise.answer ? 'correct' : ''}} {{lessonAnswered && selectedOption === optIdx && optIdx !== currentLesson.exercise.answer ? 'wrong' : ''}} {{selectedOption === optIdx && !lessonAnswered ? 'selected' : ''}}"
             bindtap="{{lessonAnswered ? '' : 'onAnswerSelect'}}"
             data-idx="{{optIdx}}"
           >
