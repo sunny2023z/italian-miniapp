@@ -415,10 +415,7 @@
 
         <!-- 词汇 -->
         <view class="sheet-section-title">📖 词汇（{{currentLesson.vocab.length}}个）</view>
-        <view wx:for="{{currentLesson.vocab}}" wx:key="italian"
-          class="vocab-item"
-          bindtap="onVocabTTSTap"
-          data-idx="{{index}}">
+        <view wx:for="{{currentLesson.vocab}}" wx:key="italian" class="vocab-item" bindtap="onVocabTTSTap" data-idx="{{index}}">
           <view class="vocab-left">
             <text class="vocab-italian">{{item.italian}}</text>
             <text class="vocab-tts-hint">🔊</text>
