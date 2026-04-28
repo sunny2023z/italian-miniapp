@@ -123,7 +123,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    const translateUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
+    const translateUrl = `https://translate.google.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
     try {
       const { status, body } = await httpsGet(translateUrl);
       if (status !== 200) throw new Error(`Google 翻译返回 ${status}`);
