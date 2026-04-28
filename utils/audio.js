@@ -1,7 +1,7 @@
 // utils/audio.js - 意大利语音频播放工具
 // 策略：优先播放本地打包音频，找不到则走在线 TTS + 缓存
 
-const SERVER = 'https://italian-translate.jellyzen.fun';
+const SERVER = 'https://workspacezo5xoluuarzw6hm6ve-3000.gz.cloudide.woa.com';
 const { ALL_PHRASES } = require('../data/phrases');
 
 // 建立 italian文本 → id 的索引（速查页102条 + 学习页83条）
