@@ -48,28 +48,38 @@ function _playLocal(filePath) {
   setTimeout(() => { try { ctx.play(); } catch (e) {} }, 400);
 }
 
-function _downloadAndPlay(key) {
-  if (_pending[key]) return;
-  _pending[key] = true;
-
+function _streamAndPlay(key) {
+  // 直接用 InnerAudioContext 串流播放 Google TTS（无需 downloadFile）
   const googleUrl = `${GOOGLE_TTS}?ie=UTF-8&q=${encodeURIComponent(key)}&tl=it&client=gtx&ttsspeed=0.8`;
   const serverUrl = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
 
-  // 先试 Google TTS
-  wx.downloadFile({
-    url: googleUrl,
-    timeout: 6000,
-    success: (res) => {
-      delete _pending[key];
-      if (res.statusCode === 200) {
-        _ttsCache[key] = res.tempFilePath;
-        _playLocal(res.tempFilePath);
-      } else {
-        _downloadFromServer(key, serverUrl);
-      }
-    },
-    fail: () => _downloadFromServer(key, serverUrl),
-  });
+  if (_audioCtx) {
+    try { _audioCtx.stop(); _audioCtx.destroy(); } catch (e) {}
+    _audioCtx = null;
+  }
+
+  try { wx.setInnerAudioOption({ speakerOn: true, obeyMuteSwitch: false }); } catch (e) {}
+
+  const ctx = wx.createInnerAudioContext();
+  _audioCtx = ctx;
+  ctx.obeyMuteSwitch = false;
+  ctx.src = googleUrl;
+
+  let fallbackDone = false;
+  const fallback = () => {
+    if (fallbackDone) return;
+    fallbackDone = true;
+    // Google 失败，降级到服务器
+    try { ctx.stop(); ctx.destroy(); } catch (e) {}
+    _downloadFromServer(key, serverUrl);
+  };
+
+  ctx.onCanplay(() => ctx.play());
+  ctx.onError(() => fallback());
+  ctx.onEnded(() => { try { ctx.destroy(); } catch (e) {} if (_audioCtx === ctx) _audioCtx = null; });
+  setTimeout(() => { try { ctx.play(); } catch (e) {} }, 300);
+  // 8秒还没出声就降级
+  setTimeout(() => { if (_audioCtx === ctx) fallback(); }, 8000);
 }
 
 function _downloadFromServer(key, url) {
@@ -113,49 +123,14 @@ function playText(text) {
   }
 
   // 3. 在线 TTS 下载
-  _downloadAndPlay(key);
+  _streamAndPlay(key);
 }
 
 /**
  * 预加载到会话缓存（用于动态翻译结果）
  */
 function prefetchTTS(text) {
-  if (!text) return;
-  const key = text.trim();
-  if (_textToId[key] !== undefined) return;
-  if (_ttsCache[key] || _pending[key]) return;
-  _pending[key] = true;
-
-  const googleUrl = `${GOOGLE_TTS}?ie=UTF-8&q=${encodeURIComponent(key)}&tl=it&client=gtx&ttsspeed=0.8`;
-  const serverUrl = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
-
-  wx.downloadFile({
-    url: googleUrl,
-    timeout: 6000,
-    success: (res) => {
-      delete _pending[key];
-      if (res.statusCode === 200) {
-        _ttsCache[key] = res.tempFilePath;
-      } else {
-        // 降级到服务器
-        _pending[key] = true;
-        wx.downloadFile({
-          url: serverUrl,
-          success: (r) => { delete _pending[key]; if (r.statusCode === 200) _ttsCache[key] = r.tempFilePath; },
-          fail: () => { delete _pending[key]; },
-        });
-      }
-    },
-    fail: () => {
-      delete _pending[key];
-      _pending[key] = true;
-      wx.downloadFile({
-        url: serverUrl,
-        success: (r) => { delete _pending[key]; if (r.statusCode === 200) _ttsCache[key] = r.tempFilePath; },
-        fail: () => { delete _pending[key]; },
-      });
-    },
-  });
+  // 串流模式下无需预下载，空函数保留接口
 }
 
 function stopAudio() {
