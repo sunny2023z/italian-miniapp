@@ -90,27 +90,47 @@ Page({
     const isChinese = /[\u4e00-\u9fa5]/.test(text);
     const from = isChinese ? 'zh-CN' : 'it';
     const to = isChinese ? 'it' : 'zh-CN';
-    // 使用 MyMemory 翻译 API（公网可访问，无需 key）
-    const langpair = `${from}|${to}`;
-    const translateUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${encodeURIComponent(langpair)}`;
+    // 翻译策略：优先 Google，失败自动降级到 MyMemory
+    const googleUrl = `https://translate.google.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
+    const myMemoryUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${encodeURIComponent(from + '|' + to)}`;
+
+    const applyResult = (result) => {
+      const italian = isChinese ? result : text;
+      this.setData({
+        translateResult: result,
+        translateItalian: italian,
+        translateChinese: isChinese ? text : result,
+        translateFaved: false,
+      });
+      prefetchTTS(italian);
+    };
+
+    const tryMyMemory = () => {
+      wx.request({
+        url: myMemoryUrl,
+        timeout: 10000,
+        success: (res) => {
+          if (res.statusCode === 200 && res.data && res.data.responseData && res.data.responseData.translatedText) {
+            applyResult(res.data.responseData.translatedText);
+          }
+        },
+        fail: (err) => console.error('[translate] MyMemory 也失败:', err),
+        complete: () => this.setData({ translateLoading: false }),
+      });
+    };
+
     wx.request({
-      url: translateUrl,
-      timeout: 10000,
+      url: googleUrl,
+      timeout: 6000,
       success: (res) => {
-        if (res.statusCode === 200 && res.data && res.data.responseData && res.data.responseData.translatedText) {
-          const result = res.data.responseData.translatedText;
-          const italian = isChinese ? result : text;
-          this.setData({
-            translateResult: result,
-            translateItalian: italian,
-            translateChinese: isChinese ? text : result,
-            translateFaved: false,
-          });
-          prefetchTTS(italian);
+        if (res.statusCode === 200 && res.data && res.data[0]) {
+          applyResult(res.data[0].map(seg => seg[0]).join(''));
+          this.setData({ translateLoading: false });
+        } else {
+          tryMyMemory();
         }
       },
-      fail: (err) => console.error('[translate] 失败:', err),
-      complete: () => this.setData({ translateLoading: false }),
+      fail: () => tryMyMemory(),
     });
   },
 

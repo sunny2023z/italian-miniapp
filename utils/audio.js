@@ -2,6 +2,7 @@
 // 策略：优先播放本地打包音频，找不到则走在线 TTS + 缓存
 
 const SERVER = 'https://workspacezo5xoluuarzw6hm6ve-3000.gz.cloudide.woa.com';
+const GOOGLE_TTS = 'https://translate.google.com/translate_tts';
 const { ALL_PHRASES } = require('../data/phrases');
 
 // 建立 italian文本 → id 的索引（速查页102条 + 学习页83条）
@@ -50,7 +51,30 @@ function _playLocal(filePath) {
 function _downloadAndPlay(key) {
   if (_pending[key]) return;
   _pending[key] = true;
-  const url = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
+
+  const googleUrl = `${GOOGLE_TTS}?ie=UTF-8&q=${encodeURIComponent(key)}&tl=it&client=gtx&ttsspeed=0.8`;
+  const serverUrl = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
+
+  // 先试 Google TTS
+  wx.downloadFile({
+    url: googleUrl,
+    timeout: 6000,
+    success: (res) => {
+      delete _pending[key];
+      if (res.statusCode === 200) {
+        _ttsCache[key] = res.tempFilePath;
+        _playLocal(res.tempFilePath);
+      } else {
+        _downloadFromServer(key, serverUrl);
+      }
+    },
+    fail: () => _downloadFromServer(key, serverUrl),
+  });
+}
+
+function _downloadFromServer(key, url) {
+  if (_pending[key]) return;
+  _pending[key] = true;
   wx.downloadFile({
     url,
     success: (res) => {
@@ -98,18 +122,39 @@ function playText(text) {
 function prefetchTTS(text) {
   if (!text) return;
   const key = text.trim();
-  // 本地有包就不需要预加载
   if (_textToId[key] !== undefined) return;
   if (_ttsCache[key] || _pending[key]) return;
   _pending[key] = true;
-  const url = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
+
+  const googleUrl = `${GOOGLE_TTS}?ie=UTF-8&q=${encodeURIComponent(key)}&tl=it&client=gtx&ttsspeed=0.8`;
+  const serverUrl = `${SERVER}/tts?text=${encodeURIComponent(key)}&lang=it`;
+
   wx.downloadFile({
-    url,
+    url: googleUrl,
+    timeout: 6000,
     success: (res) => {
       delete _pending[key];
-      if (res.statusCode === 200) _ttsCache[key] = res.tempFilePath;
+      if (res.statusCode === 200) {
+        _ttsCache[key] = res.tempFilePath;
+      } else {
+        // 降级到服务器
+        _pending[key] = true;
+        wx.downloadFile({
+          url: serverUrl,
+          success: (r) => { delete _pending[key]; if (r.statusCode === 200) _ttsCache[key] = r.tempFilePath; },
+          fail: () => { delete _pending[key]; },
+        });
+      }
     },
-    fail: () => { delete _pending[key]; },
+    fail: () => {
+      delete _pending[key];
+      _pending[key] = true;
+      wx.downloadFile({
+        url: serverUrl,
+        success: (r) => { delete _pending[key]; if (r.statusCode === 200) _ttsCache[key] = r.tempFilePath; },
+        fail: () => { delete _pending[key]; },
+      });
+    },
   });
 }
 
