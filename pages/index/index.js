@@ -90,14 +90,15 @@ Page({
     const isChinese = /[\u4e00-\u9fa5]/.test(text);
     const from = isChinese ? 'zh-CN' : 'it';
     const to = isChinese ? 'it' : 'zh-CN';
-    // 直接调用 Google 翻译（无需中转服务器）
-    const translateUrl = `https://translate.google.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
+    // 使用 MyMemory 翻译 API（公网可访问，无需 key）
+    const langpair = `${from}|${to}`;
+    const translateUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${encodeURIComponent(langpair)}`;
     wx.request({
       url: translateUrl,
       timeout: 10000,
       success: (res) => {
-        if (res.statusCode === 200 && res.data && res.data[0]) {
-          const result = res.data[0].map(seg => seg[0]).join('');
+        if (res.statusCode === 200 && res.data && res.data.responseData && res.data.responseData.translatedText) {
+          const result = res.data.responseData.translatedText;
           const italian = isChinese ? result : text;
           this.setData({
             translateResult: result,
