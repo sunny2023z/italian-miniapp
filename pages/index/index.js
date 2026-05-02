@@ -2,7 +2,6 @@
 const { ALL_PHRASES, CATEGORIES } = require('../../data/phrases');
 const { playItalian, playText, prefetchTTS } = require('../../utils/audio');
 
-const SERVER = 'https://workspacezo5xoluuarzw6hm6ve-3000.gz.cloudide.woa.com';
 const TRANSLATE_DEBOUNCE = 400;
 
 Page({
@@ -91,13 +90,14 @@ Page({
     const isChinese = /[\u4e00-\u9fa5]/.test(text);
     const from = isChinese ? 'zh-CN' : 'it';
     const to = isChinese ? 'it' : 'zh-CN';
+    // 直接调用 Google 翻译（无需中转服务器）
+    const translateUrl = `https://translate.google.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
     wx.request({
-      url: `${SERVER}/translate`,
-      data: { text, from, to },
+      url: translateUrl,
       timeout: 10000,
       success: (res) => {
-        if (res.statusCode === 200 && res.data.result) {
-          const result = res.data.result;
+        if (res.statusCode === 200 && res.data && res.data[0]) {
+          const result = res.data[0].map(seg => seg[0]).join('');
           const italian = isChinese ? result : text;
           this.setData({
             translateResult: result,
